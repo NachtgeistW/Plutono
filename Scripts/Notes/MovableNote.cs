@@ -12,12 +12,12 @@ namespace Plutono.Core.Note
             throw new NotImplementedException();
         }
 
-
-        public void Move(double elapsedTime, float chartPlaySpeed, float curTime)
+        public virtual bool ShouldMiss()
         {
+            throw new NotImplementedException();
         }
 
-        public virtual bool ShouldMiss()
+        public bool IsTouch()
         {
             throw new NotImplementedException();
         }

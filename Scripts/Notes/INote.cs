@@ -9,8 +9,13 @@ namespace Plutono.Core.Note
 
     public interface IMovable : INote
     {
-        public void Move(double elapsedTime, float chartPlaySpeed, float curTime);
         public bool ShouldMiss();
+
+        /// <summary>
+        /// note 是否被触摸（点击、按着或滑动）
+        /// </summary>
+        /// <returns>只要有一只手指按住就返回 true</returns>
+        public bool IsTouch();
     }
 
     public interface IPianoSoundPlayable : INote

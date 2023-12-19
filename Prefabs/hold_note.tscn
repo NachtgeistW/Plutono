@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://blmrt3wqw10a8"]
+
+[ext_resource type="Script" path="res://Scripts/Notes/HoldNote.cs" id="1_ukfe3"]
+[ext_resource type="Script" path="res://Scripts/Notes/Renderer/HoldNoteRenderer.cs" id="2_1lmoj"]
+[ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="3_xuw4j"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1psu6"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.s3tc.ctex"
+
+[node name="HoldNote" type="Node3D" node_paths=PackedStringArray("NoteRenderer")]
+script = ExtResource("1_ukfe3")
+NoteRenderer = NodePath("Renderer")
+
+[node name="Renderer" type="Node3D" parent="." node_paths=PackedStringArray("head", "body", "end")]
+script = ExtResource("2_1lmoj")
+head = NodePath("head")
+body = NodePath("body")
+end = NodePath("end")
+
+[node name="head" type="Sprite3D" parent="Renderer"]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+axis = 1
+render_priority = 2
+texture = ExtResource("3_xuw4j")
+
+[node name="body" type="Sprite3D" parent="Renderer"]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+axis = 1
+render_priority = 1
+texture = SubResource("CompressedTexture2D_1psu6")
+region_rect = Rect2(0, 0, 128, 128)
+
+[node name="end" type="Sprite3D" parent="Renderer"]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+axis = 1
+render_priority = 2
+texture = ExtResource("3_xuw4j")

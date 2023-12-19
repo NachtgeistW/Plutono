@@ -1,12 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=11 format=3 uid="uid://0xp641m4eog6"]
 
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
 [ext_resource type="Script" path="res://Scripts/Game/Gameplay.cs" id="1_mbsmc"]
 [ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
 [ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="3_m7hjw"]
-[ext_resource type="Script" path="res://Scripts/Notes/HoldNote.cs" id="4_88k4k"]
 [ext_resource type="Script" path="res://Scripts/Notes/Renderer/TouchNoteRenderer.cs" id="5_6w3l3"]
-[ext_resource type="Script" path="res://Scripts/Notes/Renderer/HoldNoteRenderer.cs" id="7_6qnu3"]
+[ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
 
 [sub_resource type="Gradient" id="Gradient_1f40j"]
 colors = PackedColorArray(1, 0.717647, 0, 1, 1, 1, 1, 0)
@@ -24,9 +23,6 @@ color_ramp = SubResource("GradientTexture1D_ae3ln")
 radius = 0.3
 height = 0.6
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1psu6"]
-load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.s3tc.ctex"
-
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("blankNote", "holdNote")]
 script = ExtResource("1_mbsmc")
 blankNote = NodePath("Stage/Notes/BlankNote")
@@ -39,10 +35,11 @@ holdNote = NodePath("../Stage/Notes/HoldNote")
 explosion = NodePath("../Stage/Explosion/GPUParticles3D")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 5)
+transform = Transform3D(-1, 8.74227e-08, 0, 7.57103e-08, 0.866025, 0.5, 4.37114e-08, 0.5, -0.866025, 0, 8, -5)
 fov = 90.0
 
 [node name="Stage" type="Node3D" parent="."]
+metadata/_edit_lock_ = true
 
 [node name="Explosion" type="Node3D" parent="Stage"]
 
@@ -64,7 +61,6 @@ render_priority = -10
 texture = ExtResource("1_78axj")
 
 [node name="Notes" type="Node3D" parent="Stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="BlankNote" type="Node3D" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer")]
 script = ExtResource("3_m7hjw")
@@ -75,37 +71,13 @@ script = ExtResource("5_6w3l3")
 noteSprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite3D" parent="Stage/Notes/BlankNote/Renderer"]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -26.9642)
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 26.964)
 axis = 1
 render_priority = 1
 texture = ExtResource("1_78axj")
 
-[node name="HoldNote" type="Node3D" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer")]
-script = ExtResource("4_88k4k")
-NoteRenderer = NodePath("Renderer")
-
-[node name="Renderer" type="Node3D" parent="Stage/Notes/HoldNote" node_paths=PackedStringArray("head", "body", "end")]
-script = ExtResource("7_6qnu3")
-head = NodePath("head")
-body = NodePath("body")
-end = NodePath("end")
-
-[node name="head" type="Sprite3D" parent="Stage/Notes/HoldNote/Renderer"]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 3, -1.90735e-06, -16.8776)
-axis = 1
-render_priority = 1
-texture = ExtResource("1_78axj")
-
-[node name="body" type="Sprite3D" parent="Stage/Notes/HoldNote/Renderer"]
-transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 20, 3, 0, -29.1416)
-axis = 1
-texture = SubResource("CompressedTexture2D_1psu6")
-
-[node name="end" type="Sprite3D" parent="Stage/Notes/HoldNote/Renderer"]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -41.2907)
-axis = 1
-render_priority = 1
-texture = ExtResource("1_78axj")
+[node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 20)
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3

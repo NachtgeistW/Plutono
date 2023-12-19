@@ -5,8 +5,8 @@ namespace Plutono.Core.Note
 {
     public partial class HoldNote : MovableNote, IHoldable
     {
-        private float beginTime = -10f;
-        private float endTime = -20f;
+        private float beginTime = 0f;
+        private float endTime = 10f;
         private float HoldingLength;
 
         [Export] public Render.HoldNoteRenderer NoteRenderer { get; set; }
@@ -17,14 +17,15 @@ namespace Plutono.Core.Note
 
         private double nowTime;
         private float offset;
+
         public override void _Ready()
         {
             base._Ready();
 
-            HoldingLength =  beginTime - endTime;
+            HoldingLength = endTime - beginTime;
             NoteRenderer.Init(beginTime, HoldingLength, endTime);
-            GD.Print($"{HoldingLength}");
-}
+            //GD.Print($"{HoldingLength}");
+        }
 
         public override void _Process(double delta)
         {
