@@ -1,13 +1,14 @@
 using Godot;
-using System;
 
 namespace Plutono.Core.Note
 {
-    public partial class HoldNote : MovableNote, IHoldable
+    public partial class HoldNote : Note, IMovable, IHoldable
     {
-        private float beginTime = 0f;
-        private float endTime = 10f;
-        private float HoldingLength;
+        private float chartPlaySpeed = 5.0f;
+
+        public float beginTime { get; private set; } = 0f;
+        public float endTime { get; private set; } = 10f;
+        protected float HoldingLength;
 
         [Export] public Render.HoldNoteRenderer NoteRenderer { get; set; }
         public float HoldingStartingTime { get; protected set; } = float.MaxValue;
@@ -18,13 +19,10 @@ namespace Plutono.Core.Note
         private double nowTime;
         private float offset;
 
-        public override void _Ready()
+        public void Initialize()
         {
-            base._Ready();
-
             HoldingLength = endTime - beginTime;
-            NoteRenderer.Init(beginTime, HoldingLength, endTime);
-            //GD.Print($"{HoldingLength}");
+            NoteRenderer.OnNoteLoaded(this);
         }
 
         public override void _Process(double delta)
@@ -32,6 +30,11 @@ namespace Plutono.Core.Note
             base._Process(delta);
 
             nowTime += delta;
+        }
+
+        public bool IsTouch()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void OnHoldStart(Vector2 worldPos, float curTime)
@@ -118,9 +121,9 @@ namespace Plutono.Core.Note
             GD.Print("OnHoldMiss");
         }
 
-        public override bool ShouldMiss()
+        public bool ShouldMiss()
         {
-            return !IsHolding && base.ShouldMiss();
+            return !IsHolding;
         }
     }
 }

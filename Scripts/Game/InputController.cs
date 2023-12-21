@@ -10,9 +10,9 @@ public partial class InputController : Node
     //public readonly Dictionary<int, FlickNote> FlickingNotes = new Dictionary<int, FlickNote>(); // Finger index to note
     public readonly Dictionary<int, HoldNote> HoldingNotes = new(); // Finger index to note
     public readonly List<HoldNote> TouchableHoldNotes = new(); // Hold
-    public readonly List<MovableNote> TouchableNormalNotes = new(); // Piano, Blank, Hold, Flick
+    public readonly List<Note> TouchableNormalNotes = new(); // Piano, Blank, Hold, Flick
 
-    public void OnNoteCollected(MovableNote note)
+    public void OnNoteCollected(Note note)
     {
         if (note is HoldNote)
         {
