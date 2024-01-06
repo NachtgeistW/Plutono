@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=12 format=3 uid="uid://0xp641m4eog6"]
 
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
 [ext_resource type="Script" path="res://Scripts/Game/Gameplay.cs" id="1_mbsmc"]
 [ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
+[ext_resource type="Script" path="res://Scripts/Game/NoteController.cs" id="3_gb8kx"]
 [ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="3_m7hjw"]
 [ext_resource type="Script" path="res://Scripts/Notes/Renderer/TapNoteRenderer.cs" id="5_vb7qn"]
 [ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
@@ -23,16 +24,19 @@ color_ramp = SubResource("GradientTexture1D_ae3ln")
 radius = 0.3
 height = 0.6
 
-[node name="Node3D" type="Node3D" node_paths=PackedStringArray("blankNote", "holdNote")]
+[node name="Node3D" type="Node3D"]
 script = ExtResource("1_mbsmc")
-blankNote = NodePath("Stage/Notes/BlankNote")
-holdNote = NodePath("Stage/Notes/HoldNote")
 
 [node name="InputController" type="Node3D" parent="." node_paths=PackedStringArray("blankNote", "holdNote", "explosion")]
 script = ExtResource("2_jx4w1")
 blankNote = NodePath("../Stage/Notes/BlankNote")
 holdNote = NodePath("../Stage/Notes/HoldNote")
 explosion = NodePath("../Stage/Explosion/GPUParticles3D")
+
+[node name="NoteController" type="Node3D" parent="." node_paths=PackedStringArray("blankNote", "holdNote")]
+script = ExtResource("3_gb8kx")
+blankNote = NodePath("../Stage/Notes/BlankNote")
+holdNote = NodePath("../Stage/Notes/HoldNote")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-1, 8.74227e-08, 0, 7.57103e-08, 0.866025, 0.5, 4.37114e-08, 0.5, -0.866025, 0, 8, -5)
