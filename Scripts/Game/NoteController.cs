@@ -2,6 +2,7 @@
 using Plutono.Core.Note;
 using System.Collections.Generic;
 using Plutono.Util;
+using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 public partial class NoteController : Node3D
 {
@@ -12,20 +13,6 @@ public partial class NoteController : Node3D
     [Export] HoldNote holdNote;
 
     protected float chartPlaySpeed = 5f;
-
-    public override void _EnterTree()
-    {
-        base._EnterTree();
-
-        EventCenter.AddListener<FingerUpEvent>(OnFingerUp);
-    }
-
-    public override void _ExitTree()
-    {
-        base._ExitTree();
-
-        EventCenter.RemoveListener<FingerUpEvent>(OnFingerUp);
-    }
 
     public override void _Ready()
     {
@@ -56,8 +43,4 @@ public partial class NoteController : Node3D
         }
     }
 
-    private void OnFingerUp(FingerUpEvent @event)
-    {
-
-    }
 }

@@ -15,7 +15,7 @@ namespace Plutono.Core.Note
         /// note 是否被触摸（点击、按着或滑动）
         /// </summary>
         /// <returns>只要有一只手指按住就返回 true</returns>
-        public bool IsTouch();
+        public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime);
     }
 
     public interface IPianoSoundPlayable : INote

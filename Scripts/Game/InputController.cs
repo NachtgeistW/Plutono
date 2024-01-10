@@ -1,7 +1,8 @@
 using Godot;
 using Plutono.Core.Note;
-using System;
 using System.Collections.Generic;
+using Plutono.Util;
+using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 public partial class InputController : Node
 {
@@ -23,7 +24,7 @@ public partial class InputController : Node
     [Export] BlankNote blankNote;
     [Export] HoldNote holdNote;
 
-    [Export] Godot.GpuParticles3D explosion;
+    [Export] GpuParticles3D explosion;
 
     public override void _Input(InputEvent @event)
     {
@@ -36,7 +37,10 @@ public partial class InputController : Node
                     GD.Print("Pressed");
                 }
                 else
+                {
                     GD.Print("Released");
+                    EventCenter.Broadcast(new FingerUpEvent {WorldPos = new Vector3(1, 0, 0), Time = 10});
+                }
                 GD.Print("Mouse Click/Unclick at: ", eventMouseButton.Position);
 
                 // var transform = explosion.Transform;
@@ -44,7 +48,6 @@ public partial class InputController : Node
                 // explosion.Transform = transform;
                 // explosion.Emitting = true;
 
-                blankNote.QueueFree();
             }
         }
 
@@ -70,4 +73,25 @@ public partial class InputController : Node
             holdNote.UpdateHold(Vector2.Zero, (float)curTime);
     }
 
+}
+
+public struct FingerDownEvent : IEvent
+{
+    //public Finger Finger;
+    public Vector3 WorldPos;
+    public double Time;
+}
+
+public struct FingerMoveEvent : IEvent
+{
+    //public Finger Finger;
+    public Vector3 WorldPos;
+    public double Time;
+}
+
+public struct FingerUpEvent : IEvent
+{
+    //public Finger Finger;
+    public Vector3 WorldPos;
+    public double Time;
 }
