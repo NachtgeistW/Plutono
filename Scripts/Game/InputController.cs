@@ -39,7 +39,7 @@ public partial class InputController : Node
                 else
                 {
                     Debug.Log("Released");
-                    EventCenter.Broadcast(new FingerUpEvent {WorldPos = new Vector3(1, 0, 0), Time = 10});
+                    EventCenter.Broadcast(new FingerUpEvent {WorldPos = new Vector3(-3, 0, 0), Time = 10});
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
             }
