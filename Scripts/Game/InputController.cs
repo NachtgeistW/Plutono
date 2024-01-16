@@ -1,6 +1,7 @@
 using Godot;
 using Plutono.Core.Note;
 using System.Collections.Generic;
+using Plutono.Scripts.Utils;
 using Plutono.Util;
 using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
@@ -34,14 +35,14 @@ public partial class InputController : Node
             {
                 if (eventMouseButton.IsPressed())
                 {
-                    GD.Print("Pressed");
+                    Debug.Log("Pressed");
                 }
                 else
                 {
-                    GD.Print("Released");
+                    Debug.Log("Released");
                     EventCenter.Broadcast(new FingerUpEvent {WorldPos = new Vector3(1, 0, 0), Time = 10});
                 }
-                GD.Print("Mouse Click/Unclick at: ", eventMouseButton.Position);
+                Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
 
                 // var transform = explosion.Transform;
                 // transform.Origin = new Vector3(blankNote.Transform.Origin.X, transform.Origin.Y, transform.Origin.Z);

@@ -61,10 +61,8 @@ public partial class JudgeController : Node3D
                 out var deltaXPos, out var grade);
             if (note is not null)
             {
-#if DEBUG
                 Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
                           $"Note: {note.data.id} Time: {note.data.time} CurTime: {curTime} Pos: {note.data.pos} JudgeSize: {(note.data.size < 1.2 ? 0.6 : note.data.size / 2)}");
-#endif
                 EventCenter.Broadcast(new NoteClearEvent<BlankNote>
                 {
                     Note = note,
