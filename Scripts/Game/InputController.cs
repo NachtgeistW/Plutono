@@ -25,7 +25,6 @@ public partial class InputController : Node
     [Export] BlankNote blankNote;
     [Export] HoldNote holdNote;
 
-    [Export] GpuParticles3D explosion;
 
     public override void _Input(InputEvent @event)
     {
@@ -43,12 +42,6 @@ public partial class InputController : Node
                     EventCenter.Broadcast(new FingerUpEvent {WorldPos = new Vector3(1, 0, 0), Time = 10});
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-
-                // var transform = explosion.Transform;
-                // transform.Origin = new Vector3(blankNote.Transform.Origin.X, transform.Origin.Y, transform.Origin.Z);
-                // explosion.Transform = transform;
-                // explosion.Emitting = true;
-
             }
         }
 
