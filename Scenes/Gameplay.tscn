@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=43 format=3 uid="uid://0xp641m4eog6"]
 
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
 [ext_resource type="Script" path="res://Scripts/Game/Gameplay.cs" id="1_mbsmc"]
@@ -11,22 +11,6 @@
 [ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://Textures/02.png" id="6_iwybc"]
 [ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
-
-[sub_resource type="Gradient" id="Gradient_1f40j"]
-colors = PackedColorArray(1, 0.717647, 0, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ae3ln"]
-gradient = SubResource("Gradient_1f40j")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_w4a4i"]
-spread = 180.0
-initial_velocity_min = 10.0
-initial_velocity_max = 50.0
-color_ramp = SubResource("GradientTexture1D_ae3ln")
-
-[sub_resource type="SphereMesh" id="SphereMesh_ytd5q"]
-radius = 0.3
-height = 0.6
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82cx"]
 atlas = ExtResource("6_iwybc")
@@ -192,7 +176,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"good",
-"speed": 30.0
+"speed": 50.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -248,7 +232,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"perfect",
-"speed": 30.0
+"speed": 50.0
 }]
 
 [node name="Game" type="Node3D"]
@@ -271,9 +255,8 @@ script = ExtResource("4_edq2k")
 NoteControl = NodePath("../NoteController")
 Game = NodePath("../..")
 
-[node name="Explosion" type="Node3D" parent="Controllers" node_paths=PackedStringArray("explosion", "animate")]
+[node name="Explosion" type="Node3D" parent="Controllers" node_paths=PackedStringArray("animate")]
 script = ExtResource("5_xm241")
-explosion = NodePath("../../Stage/Explosion/GPUParticles3D")
 animate = NodePath("../../Stage/Explosion/AnimatedSprite3D")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -286,18 +269,11 @@ metadata/_edit_lock_ = true
 [node name="Explosion" type="Node3D" parent="Stage"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Stage/Explosion"]
-emitting = false
-amount = 30
-one_shot = true
-explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_w4a4i")
-draw_pass_1 = SubResource("SphereMesh_ytd5q")
-
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="Stage/Explosion"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+visible = false
 sprite_frames = SubResource("SpriteFrames_vluo7")
-animation = &"good"
+animation = &"perfect"
 
 [node name="Judgline" type="Node3D" parent="Stage"]
 
