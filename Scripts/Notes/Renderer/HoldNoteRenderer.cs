@@ -45,8 +45,8 @@ namespace Plutono.Core.Note.Render
         {
             var transform = Transform;
 
-            var zPos = Transform.Origin.Z - chartPlaySpeed * (float)elapsedTime;
-            transform.Origin = new Vector3(Transform.Origin.X, Transform.Origin.Y, zPos);
+            var zPos = Transform.Origin.Z + chartPlaySpeed * (float)elapsedTime;
+            transform.Origin.Z = zPos;
 
             Transform = transform;
         }
