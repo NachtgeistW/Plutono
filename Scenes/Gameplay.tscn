@@ -304,7 +304,6 @@ texture = ExtResource("1_78axj")
 
 [node name="Explosion" type="AnimatedSprite3D" parent="Stage/Notes/BlankNote/Renderer"]
 transform = Transform3D(8, 0, 0, 0, 6.9282, 4, 0, -4, 6.9282, 0, 0, 0)
-visible = false
 render_priority = 2
 sprite_frames = SubResource("SpriteFrames_vluo7")
 animation = &"perfect"

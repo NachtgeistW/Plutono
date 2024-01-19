@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Plutono.Core.Note.Render
@@ -42,7 +43,25 @@ namespace Plutono.Core.Note.Render
             noteSprite.Visible = false;
 
             explosion.Visible = true;
-            explosion.Play();
+
+
+            switch (grade)
+            {
+                case NoteGrade.Perfect:
+                    var transform = Transform;
+                    transform.Origin.Z = 0;
+                    Transform = transform;
+                    explosion.Play("perfect");
+                    break;
+                case NoteGrade.Good:
+                case NoteGrade.Bad:
+                    explosion.Play("good");
+                    break;
+                case NoteGrade.Miss:
+                case NoteGrade.None:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
+            }
         }
 
         private void OnExplosionAnimateFinish() => explosion.Visible = false;
