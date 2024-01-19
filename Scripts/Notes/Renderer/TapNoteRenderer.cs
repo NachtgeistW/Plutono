@@ -4,12 +4,27 @@ namespace Plutono.Core.Note.Render
 {
     public partial class TapNoteRenderer : NoteRenderer, IRendererTouchable
     {
-        [Export] Sprite3D noteSprite;
-        
+        [Export] private Sprite3D noteSprite;
+        [Export] private AnimatedSprite3D explosion;
+
         public bool DisplayNoteId { get; set; }
 
         public TapNoteRenderer()
         {
+        }
+
+        public override void _EnterTree()
+        {
+            base._EnterTree();
+
+            explosion.AnimationFinished += OnExplosionAnimateFinish;
+        }
+
+        public override void _ExitTree()
+        {
+            base._ExitTree();
+
+            explosion.AnimationFinished -= OnExplosionAnimateFinish;
         }
 
         public void Move(double elapsedTime, float chartPlaySpeed)
@@ -24,8 +39,13 @@ namespace Plutono.Core.Note.Render
 
         public void OnClear(NoteGrade grade)
         {
-            throw new System.NotImplementedException();
+            noteSprite.Visible = false;
+
+            explosion.Visible = true;
+            explosion.Play();
         }
+
+        private void OnExplosionAnimateFinish() => explosion.Visible = false;
 
         public void OnDispose()
         {

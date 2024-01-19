@@ -12,7 +12,7 @@ namespace Plutono.Scripts.Notes
 
         public BlankNote()
         {
-            data = new BlankNoteData(1, -3, 1.2, 10);
+            data = new BlankNoteData(1, -1, 1.2, 10);
         }
 
         public BlankNote(BlankNoteData data)

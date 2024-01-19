@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Plutono.Scripts.Notes;
 using Plutono.Util;
 
 namespace Plutono.Scripts.Game;
@@ -11,29 +12,15 @@ public partial class ExplosionController : Node
     {
         base._EnterTree();
         
-        animate.AnimationFinished += OnAnimateFinish;
-        EventCenter.AddListener<FingerUpEvent>(Explode);
+        EventCenter.AddListener<NoteClearEvent<BlankNote>>(Explode);
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
 
-        animate.AnimationFinished -= OnAnimateFinish;
-        EventCenter.RemoveListener<FingerUpEvent>(Explode);
+        EventCenter.RemoveListener<NoteClearEvent<BlankNote>>(Explode);
     }
 
-    private void Explode(FingerUpEvent evt)
-    {
-        {
-            animate.Visible = true;
-
-            var transform = animate.Transform;
-            transform.Origin.X = evt.WorldPos.X;
-            animate.Transform = transform;
-            animate.Play();
-        }
-    }
-
-    private void OnAnimateFinish() => animate.Visible = false;
+    private static void Explode(NoteClearEvent<BlankNote> evt) => evt.Note.NoteRenderer.OnClear(evt.Grade);
 }
