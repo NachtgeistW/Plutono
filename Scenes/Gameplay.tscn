@@ -308,9 +308,6 @@ render_priority = 2
 sprite_frames = SubResource("SpriteFrames_vluo7")
 animation = &"perfect"
 
-[node name="Explosion" type="Node3D" parent="Stage/Notes/BlankNote"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
-
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -20)
 

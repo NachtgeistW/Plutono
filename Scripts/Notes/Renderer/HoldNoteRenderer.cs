@@ -8,6 +8,7 @@ namespace Plutono.Core.Note.Render
         [Export] public Sprite3D head;
         [Export] public Sprite3D body;
         [Export] public Sprite3D end;
+        [Export] private AnimatedSprite3D explosion;
 
         private float width = 128;
         private float height = 128;
@@ -76,6 +77,7 @@ namespace Plutono.Core.Note.Render
         public void OnClear(NoteGrade grade)
         {
             //Call the effect controller to play hit effect
+            explosion.Play("good_end");
         }
 
         public void OnDispose()
