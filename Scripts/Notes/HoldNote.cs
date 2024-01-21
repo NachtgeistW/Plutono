@@ -43,7 +43,7 @@ namespace Plutono.Core.Note
             base._Ready();
 
             HoldingLength = endTime - beginTime;
-            NoteRenderer.OnNoteLoaded(this);
+            NoteRenderer.OnNoteLoaded();
         }
 
         public override void _Process(double delta)

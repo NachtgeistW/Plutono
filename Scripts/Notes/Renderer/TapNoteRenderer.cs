@@ -77,7 +77,7 @@ namespace Plutono.Core.Note.Render
         }
 
 
-        public void Render(Note note)
+        public void Render()
         {
             throw new System.NotImplementedException();
         }

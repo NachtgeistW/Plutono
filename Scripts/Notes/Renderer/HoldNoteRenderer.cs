@@ -9,7 +9,10 @@ namespace Plutono.Core.Note.Render
         [Export] public Sprite3D head;
         [Export] public Sprite3D body;
         [Export] public Sprite3D end;
+        [Export] public Node3D node;
         [Export] private AnimatedSprite3D explosion;
+
+        [Export] private HoldNote note;
 
         private float width = 128;
         private float height = 128;
@@ -21,7 +24,30 @@ namespace Plutono.Core.Note.Render
         {
         }
 
-        public void OnNoteLoaded(HoldNote note)
+        #region GodotEvent
+
+        public override void _EnterTree()
+        {
+            base._EnterTree();
+            explosion.AnimationFinished += OnExplosionAnimateFinish;
+        }
+
+        public override void _ExitTree()
+        {
+            base._ExitTree();
+            explosion.AnimationFinished -= OnExplosionAnimateFinish;
+        }
+
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+            UpdateComponentStates();
+        }
+
+        #endregion
+
+
+        public void OnNoteLoaded()
         {
             var beginTime = -note.beginTime;
             var endTime = -note.endTime;
@@ -47,15 +73,12 @@ namespace Plutono.Core.Note.Render
 
         public void Move(double elapsedTime, float chartPlaySpeed)
         {
-            var transform = Transform;
-
-            var zPos = Transform.Origin.Z + chartPlaySpeed * (float)elapsedTime;
-            transform.Origin.Z = zPos;
-
-            Transform = transform;
+            var transform = node.Transform;
+            transform.Origin.Z += chartPlaySpeed * (float)elapsedTime;
+            node.Transform = transform;
         }
 
-        public void Render(Note note)
+        public void Render()
         {
             UpdateComponentStates();
             UpdateComponentOpacity();
@@ -64,8 +87,18 @@ namespace Plutono.Core.Note.Render
 
         public void UpdateComponentStates()
         {
-            throw new NotImplementedException();
+            if (!note.IsClear && note.IsHolding && !explosion.IsPlaying())
+            {
+                explosion.Visible = true;
+                explosion.Play("good_start");
+            }
         }
+
+        private void OnExplosionAnimateFinish()
+        {
+            explosion.Play("good_onhold");
+        }
+
 
         public void UpdateComponentOpacity()
         {
