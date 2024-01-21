@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note.Render
 {
@@ -22,10 +23,10 @@ namespace Plutono.Core.Note.Render
 
         public void OnNoteLoaded(HoldNote note)
         {
-            var beginTime = note.beginTime;
-            var endTime = note.endTime;
-            var length = endTime - beginTime;
-            GD.Print(length);
+            var beginTime = -note.beginTime;
+            var endTime = -note.endTime;
+            var length = beginTime - endTime;
+            Debug.Log(length);
 
             var headTransform = head.Transform;
             var endTransform = end.Transform;
@@ -33,13 +34,15 @@ namespace Plutono.Core.Note.Render
             endTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, endTime);
 
             var bodyTransform = body.Transform;
-            bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime + length / 2);
+            bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime - length / 2);
 
             head.Transform = headTransform;
             body.Transform = bodyTransform;
             end.Transform = endTransform;
 
             body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
+
+            explosion.Visible = false;
         }
 
         public void Move(double elapsedTime, float chartPlaySpeed)

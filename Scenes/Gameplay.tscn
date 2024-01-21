@@ -255,9 +255,8 @@ script = ExtResource("4_edq2k")
 NoteControl = NodePath("../NoteController")
 Game = NodePath("../..")
 
-[node name="Explosion" type="Node3D" parent="Controllers" node_paths=PackedStringArray("animate")]
+[node name="Explosion" type="Node3D" parent="Controllers"]
 script = ExtResource("5_xm241")
-animate = NodePath("../../Stage/Notes/BlankNote/Renderer/Explosion")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 5)

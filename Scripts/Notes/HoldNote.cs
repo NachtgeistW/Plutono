@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note
 {
@@ -69,7 +70,7 @@ namespace Plutono.Core.Note
                 IsHolding = true;
                 HoldingStartingTime = curTime;
                 NoteRenderer.head.Hide();
-                GD.Print($"OnHoldStart HoldingStartingTime {HoldingStartingTime} curTime: {curTime}");
+                Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} curTime: {curTime}");
 
                 nowTime = curTime;
             }
@@ -80,7 +81,7 @@ namespace Plutono.Core.Note
             if (IsHolding)
             {
                 HeldDuration = (curTime - HoldingStartingTime) * chartPlaySpeed;
-                GD.Print($"curTime {curTime} HeldDuration {HeldDuration}");
+                Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
                 if (HeldDuration >= HoldingLength)
                 {
                     OnHoldEnd();
@@ -88,7 +89,7 @@ namespace Plutono.Core.Note
             }
             else
             {
-                GD.Print("!IsHolding");
+                Debug.Log("!IsHolding");
                 OnHoldMiss();
             }
 
@@ -127,14 +128,14 @@ namespace Plutono.Core.Note
                 将自己移出判定序列
                 删除自己
             */
-            GD.Print($"OnHoldEnd");
+            Debug.Log($"OnHoldEnd");
             IsHolding = false;
             QueueFree();
         }
 
         public void OnHoldMiss()
         {
-            GD.Print("OnHoldMiss");
+            Debug.Log("OnHoldMiss");
         }
 
         public bool ShouldMiss()
