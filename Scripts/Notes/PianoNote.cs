@@ -42,6 +42,11 @@ namespace Plutono.Core.Note
             }
         }
 
+        public void OnClear(NoteGrade grade)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool OnTap(Vector2 worldPos, double hitTime, out double deltaTime, out float deltaXPos)
         {
             throw new NotImplementedException();

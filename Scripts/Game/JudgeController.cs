@@ -91,12 +91,7 @@ public partial class JudgeController : Node3D
             {
                 Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
                           $"Note: {note.data.id} Time: {note.data.time} CurTime: {curTime} Pos: {note.data.pos} JudgeSize: {(note.data.size < 1.2 ? 0.6 : note.data.size / 2)}");
-                EventCenter.Broadcast(new NoteClearEvent<BlankNote>
-                {
-                    Note = note,
-                    Grade = grade,
-                    DeltaXPos = deltaXPos
-                });
+                note.OnClear(grade);
                 return;
             }
         }
@@ -111,12 +106,6 @@ public partial class JudgeController : Node3D
         {
             if (note.IsClear) return;
             note.OnHoldEnd();
-            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
-            {
-                Note = note,
-                //Grade = NoteGradeJudgment.Judge(deltaTime, mode),
-                //DeltaXPos = deltaXPos
-            });
             notesOnHolding.Remove(evt.Finger.Index);
 #if DEBUG
             Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +

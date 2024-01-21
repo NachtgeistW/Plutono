@@ -20,5 +20,5 @@ public partial class ExplosionController : Node
         EventCenter.RemoveListener<NoteClearEvent<BlankNote>>(Explode);
     }
 
-    private static void Explode(NoteClearEvent<BlankNote> evt) => evt.Note.NoteRenderer.OnClear(evt.Grade);
+    private static void Explode(NoteClearEvent<BlankNote> evt) => System.Linq.Expressions.Expression.Empty();
 }

@@ -16,7 +16,7 @@ namespace Plutono.Core.Note
         public float endTime { get; private set; } = 10f;
         protected float HoldingLength;
 
-        [Export] public Render.HoldNoteRenderer NoteRenderer { get; set; }
+        [Export] private Render.HoldNoteRenderer NoteRenderer { get; set; }
         public double HoldingStartingTime { get; protected set; } = float.MaxValue;
         public double HeldDuration { get; protected set; }
         //public List<int> HoldingFingers { get; } = new List<int>(2);
@@ -53,6 +53,11 @@ namespace Plutono.Core.Note
             nowTime += delta;
         }
 
+        public void Move(double delta, float chartPlaySpeed)
+        {
+            NoteRenderer.Move(delta, chartPlaySpeed);
+        }
+
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
         {
             var noteJudgingSize = data.size < 1.2 ? 0.6 : data.size / 2;
@@ -73,15 +78,15 @@ namespace Plutono.Core.Note
 
         public void OnHoldStart(Vector3 worldPos, double curTime)
         {
-            //计算手势是否点到自己
-            // if 点到自己
-            //{
-            //  判定离开判定区间 = false
-            //    isHolding = true;
-            //  统计分数和生成特效
-            //  移出头判判定序列
-            //  移入按住判定的判定序列
-            //}
+            /*计算手势是否点到自己
+             if 点到自己
+            {
+                判定离开判定区间 = false
+                isHolding = true;
+                统计分数和生成特效
+                移出头判判定序列
+              移入按住判定的判定序列
+            }*/
             if (!IsHolding)
             {
                 IsHolding = true;
@@ -149,18 +154,24 @@ namespace Plutono.Core.Note
             Debug.Log($"OnHoldEnd");
             IsHolding = false;
             IsClear = true;
-            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
-            {
-                Note = this,
-                //Grade = NoteGradeJudgment.Judge(deltaTime, mode),
-                //DeltaXPos = deltaXPos
-            });
+            OnClear(NoteGrade.None);
             QueueFree();
         }
 
         public void OnHoldMiss()
         {
             Debug.Log("OnHoldMiss");
+        }
+
+        public void OnClear(NoteGrade grade)
+        {
+            NoteRenderer.OnClear(grade);
+            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
+            {
+                Note = this,
+                Grade = grade,
+                //DeltaXPos = deltaXPos
+            });
         }
 
         public bool ShouldMiss()

@@ -1,14 +1,17 @@
 using System;
+using System.Diagnostics;
 using Godot;
 using Plutono.Core.Note;
 using Plutono.Core.Note.Render;
+using Plutono.Scripts.Game;
+using Plutono.Util;
 
 namespace Plutono.Scripts.Notes
 {
     public partial class BlankNote : Note, IMovable, ITapable
     {
         public BlankNoteData data;
-        [Export] public TapNoteRenderer NoteRenderer { get; set; }
+        [Export] private TapNoteRenderer NoteRenderer { get; set; }
 
         public BlankNote()
         {
@@ -26,14 +29,9 @@ namespace Plutono.Scripts.Notes
             NoteRenderer = noteRenderer;
         }
 
-        public void Initialize()
+        public void Move(double delta, float chartPlaySpeed)
         {
-            //data = new BlankNoteData(1, 1, 1.2, 10);
-        }
-
-        public void Initialize(float chartPlaySpeed)
-        {
-            throw new NotImplementedException();
+            NoteRenderer.Move(delta, chartPlaySpeed);
         }
 
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
@@ -52,6 +50,18 @@ namespace Plutono.Scripts.Notes
                 deltaTime = double.MaxValue;
                 return false;
             }
+        }
+
+        public void OnClear(NoteGrade grade)
+        {
+            NoteRenderer.OnClear(grade);
+            EventCenter.Broadcast(new NoteClearEvent<BlankNote>
+            {
+                Note = this,
+                Grade = grade,
+                //DeltaXPos = deltaXPos
+            });
+
         }
 
         public bool OnTap(Vector2 worldPos, double hitTime, out double deltaTime, out float deltaXPos)

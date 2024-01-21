@@ -55,12 +55,12 @@ public partial class NoteController : Node3D
     {
         foreach (var note in BlankNotes)
         {
-            note.NoteRenderer.Move(delta, chartPlaySpeed);
+            note.Move(delta, chartPlaySpeed);
         }
 
         foreach (var note in HoldNotes)
         {
-            note.NoteRenderer.Move(delta, chartPlaySpeed);
+            note.Move(delta, chartPlaySpeed);
         }
     }
 
