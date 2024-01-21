@@ -100,7 +100,7 @@ namespace Plutono.Core.Note
                 HeldDuration = (curTime - HoldingStartingTime) * chartPlaySpeed;
                 Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
                 //TODO:Verify 0.001
-                if (HeldDuration - HoldingLength < 0.001)
+                if (HoldingLength - HeldDuration < 0.0001)
                 {
                     OnHoldEnd();
                 }
