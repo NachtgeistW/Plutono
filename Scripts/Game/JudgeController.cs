@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Utils;
@@ -11,7 +12,7 @@ namespace Plutono.Scripts.Game;
 public partial class JudgeController : Node3D
 {
     [Export] private NoteController NoteControl { get; set; }
-    [Export] private Gameplay Game { get; set; }
+    [Export] private Game Game { get; set; }
 
     //private readonly Dictionary<int, SlideNote> notesOnSliding = new(); //Finger index and sliding note on it
     private readonly Dictionary<int, HoldNote> notesOnHolding= new(); //Finger index and holding note on it
@@ -23,6 +24,7 @@ public partial class JudgeController : Node3D
     {
         base._EnterTree();
 
+        EventCenter.AddListener<FingerDownEvent>(OnFingerDown);
         EventCenter.AddListener<FingerUpEvent>(OnFingerUp);
     }
 
@@ -30,12 +32,24 @@ public partial class JudgeController : Node3D
     {
         base._ExitTree();
 
+        EventCenter.RemoveListener<FingerDownEvent>(OnFingerDown);
         EventCenter.RemoveListener<FingerUpEvent>(OnFingerUp);
     }
 
     #endregion
 
-    private void OnFingerUp(FingerUpEvent evt)
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+
+        foreach (var note in notesOnHolding)
+        {
+            if (note.Value.IsHolding)
+                note.Value.UpdateHold(Vector3.Zero, Game.CurTime);
+        }
+    }
+
+    private void OnFingerDown(FingerDownEvent evt)
     {
         var worldPos = evt.WorldPos;
         var curTime = evt.Time;
@@ -56,6 +70,20 @@ public partial class JudgeController : Node3D
             //}
         }
         {
+            // Query hold note
+            foreach (var curDetectingNote in NoteControl.HoldNotes.Where(note => note.IsTouch(worldPos.X, out _, curTime, out _)))
+            {
+                if (notesOnHolding.ContainsKey(evt.Finger.Index) || notesOnHolding.ContainsValue(curDetectingNote))
+                {
+                    // Player is holding on another note, pass
+                    continue;
+                }
+                notesOnHolding.Add(evt.Finger.Index, curDetectingNote);
+                curDetectingNote.OnHoldStart(worldPos, curTime);
+                return;
+            }
+        }
+        {
             // Blank note
             var note = TryGetClosestHitNote(NoteControl.BlankNotes, worldPos, curTime,
                 out var deltaXPos, out var grade);
@@ -69,9 +97,31 @@ public partial class JudgeController : Node3D
                     Grade = grade,
                     DeltaXPos = deltaXPos
                 });
-                NoteControl.BlankNotes.Remove(note);
                 return;
             }
+        }
+    }
+
+    private void OnFingerUp(FingerUpEvent evt)
+    {
+        var curTime = evt.Time;
+
+        // Force clear this note
+        if (notesOnHolding.TryGetValue(evt.Finger.Index, out var note))
+        {
+            if (note.IsClear) return;
+            note.OnHoldEnd();
+            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
+            {
+                Note = note,
+                //Grade = NoteGradeJudgment.Judge(deltaTime, mode),
+                //DeltaXPos = deltaXPos
+            });
+            notesOnHolding.Remove(evt.Finger.Index);
+#if DEBUG
+            Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
+                      $"Note: {note.data.id} Time: {note.data.time} CurTime: {curTime} Pos: {note.data.pos} JudgeSize: {(note.data.size < 1.2 ? 0.6 : note.data.size / 2)}");
+#endif
         }
     }
 

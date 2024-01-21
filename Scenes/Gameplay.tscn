@@ -1,7 +1,7 @@
 [gd_scene load_steps=43 format=3 uid="uid://0xp641m4eog6"]
 
+[ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_2xpy6"]
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
-[ext_resource type="Script" path="res://Scripts/Game/Gameplay.cs" id="1_mbsmc"]
 [ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
 [ext_resource type="Script" path="res://Scripts/Game/NoteController.cs" id="3_gb8kx"]
 [ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="3_m7hjw"]
@@ -236,14 +236,13 @@ animations = [{
 }]
 
 [node name="Game" type="Node3D"]
-script = ExtResource("1_mbsmc")
+script = ExtResource("1_2xpy6")
 
 [node name="Controllers" type="Node3D" parent="."]
 
-[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "holdNote")]
+[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game")]
 script = ExtResource("2_jx4w1")
-blankNote = NodePath("../../Stage/Notes/BlankNote")
-holdNote = NodePath("../../Stage/Notes/HoldNote")
+Game = NodePath("../..")
 
 [node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "holdNote")]
 script = ExtResource("3_gb8kx")
@@ -308,7 +307,7 @@ sprite_frames = SubResource("SpriteFrames_vluo7")
 animation = &"perfect"
 
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -10)
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3

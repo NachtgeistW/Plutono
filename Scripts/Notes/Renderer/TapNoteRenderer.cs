@@ -38,6 +38,11 @@ namespace Plutono.Core.Note.Render
             Transform = transform;
         }
 
+        public void OnTouch(NoteGrade grade)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnClear(NoteGrade grade)
         {
             noteSprite.Visible = false;

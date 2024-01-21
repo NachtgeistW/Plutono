@@ -31,6 +31,11 @@ namespace Plutono.Scripts.Notes
             //data = new BlankNoteData(1, 1, 1.2, 10);
         }
 
+        public void Initialize(float chartPlaySpeed)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
         {
             var noteJudgingSize = data.size < 1.2 ? 0.6 : data.size / 2;

@@ -1,6 +1,8 @@
-using Godot;
 using System;
+using Godot;
 using Plutono.Scripts.Utils;
+using Plutono.Util;
+using Plutono.Scripts.Game;
 
 namespace Plutono.Core.Note
 {
@@ -8,23 +10,38 @@ namespace Plutono.Core.Note
     {
         public HoldNoteData data;
 
-        private float chartPlaySpeed = 5.0f;
+        private float chartPlaySpeed;
 
         public float beginTime { get; private set; } = 0f;
         public float endTime { get; private set; } = 10f;
         protected float HoldingLength;
 
         [Export] public Render.HoldNoteRenderer NoteRenderer { get; set; }
-        public float HoldingStartingTime { get; protected set; } = float.MaxValue;
-        public float HeldDuration { get; protected set; }
+        public double HoldingStartingTime { get; protected set; } = float.MaxValue;
+        public double HeldDuration { get; protected set; }
         //public List<int> HoldingFingers { get; } = new List<int>(2);
         public bool IsHolding { get; protected set; }
+        public bool IsClear { get; protected set; }
 
         private double nowTime;
         private float offset;
 
-        public void Initialize()
+        public HoldNote()
         {
+            data = new HoldNoteData(1, 3, 1.2, 10);
+            chartPlaySpeed = 10f;
+        }
+
+        public HoldNote(float playSpeed)
+        {
+            data = new HoldNoteData(1, 3, 1.2, 10);
+            chartPlaySpeed = playSpeed;
+        }
+
+        public override void _Ready()
+        {
+            base._Ready();
+
             HoldingLength = endTime - beginTime;
             NoteRenderer.OnNoteLoaded(this);
         }
@@ -54,7 +71,7 @@ namespace Plutono.Core.Note
             }
         }
 
-        public void OnHoldStart(Vector2 worldPos, float curTime)
+        public void OnHoldStart(Vector3 worldPos, double curTime)
         {
             //计算手势是否点到自己
             // if 点到自己
@@ -76,13 +93,14 @@ namespace Plutono.Core.Note
             }
         }
 
-        public void UpdateHold(Vector2 worldPos, float curTime)
+        public void UpdateHold(Vector3 worldPos, double curTime)
         {
             if (IsHolding)
             {
                 HeldDuration = (curTime - HoldingStartingTime) * chartPlaySpeed;
                 Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
-                if (HeldDuration >= HoldingLength)
+                //TODO:Verify 0.001
+                if (HeldDuration - HoldingLength < 0.001)
                 {
                     OnHoldEnd();
                 }
@@ -130,6 +148,13 @@ namespace Plutono.Core.Note
             */
             Debug.Log($"OnHoldEnd");
             IsHolding = false;
+            IsClear = true;
+            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
+            {
+                Note = this,
+                //Grade = NoteGradeJudgment.Judge(deltaTime, mode),
+                //DeltaXPos = deltaXPos
+            });
             QueueFree();
         }
 

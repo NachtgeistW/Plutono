@@ -4,7 +4,6 @@ namespace Plutono.Core.Note
 {
     public interface INote
     {
-        public void Initialize();
     }
 
     public interface IMovable : INote
@@ -41,7 +40,7 @@ namespace Plutono.Core.Note
     // ReSharper disable once IdentifierTypo
     public interface ISlidable : INote
     {
-        public void OnSlideStart(Vector2 worldPos, float curTime);
+        public void OnSlideStart(Vector2 worldPos, double curTime);
 
         /// <summary>
         /// 
@@ -49,13 +48,13 @@ namespace Plutono.Core.Note
         /// <param name="worldPos"></param>
         /// <returns>If the note can be cleared</returns>
         public bool UpdateSlide(Vector2 worldPos);
-        public void OnSlideEnd(double curTime, out float deltaTime, out float deltaXPos);
+        public void OnSlideEnd(double curTime, out double deltaTime, out float deltaXPos);
     }
 
     public interface IHoldable : INote
     {
-        public void OnHoldStart(Vector2 worldPos, float curTime);
-        public void UpdateHold(Vector2 worldPos, float curTime);
+        public void OnHoldStart(Vector3 worldPos, double curTime);
+        public void UpdateHold(Vector3 worldPos, double curTime);
         public void OnHoldEnd();
         public void OnHoldMiss();
     }
@@ -63,7 +62,7 @@ namespace Plutono.Core.Note
     // ReSharper disable once IdentifierTypo
     public interface IFlickable : INote
     {
-        public void OnFlickStart(Vector2 worldPos, float curTime);
+        public void OnFlickStart(Vector2 worldPos, double curTime);
         public bool UpdateFlick(Vector2 worldPos);
         public void OnFlickEnd();
     }

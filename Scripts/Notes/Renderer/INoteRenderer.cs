@@ -10,9 +10,9 @@ public interface INoteRenderer
 
 public interface IRendererMovable : INoteRenderer
 {
-    public void OnClear(NoteGrade grade);
-
     public void Move(double elapsedTime, float chartPlaySpeed);
+    public void OnClear(NoteGrade grade);
+    public void OnTouch(NoteGrade grade);
 }
 
 public interface IRendererHold : INoteRenderer

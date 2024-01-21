@@ -6,8 +6,6 @@ namespace Plutono.Scripts.Game;
 
 public partial class ExplosionController : Node
 {
-    [Export] private AnimatedSprite3D animate;
-
     public override void _EnterTree()
     {
         base._EnterTree();
