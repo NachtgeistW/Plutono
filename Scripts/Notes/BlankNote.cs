@@ -33,13 +33,17 @@ namespace Plutono.Scripts.Notes
         {
             base._Ready();
 
-            //NoteRenderer.OnNoteLoaded();
+            NoteRenderer.OnNoteLoaded();
         }
-
 
         public void Move(double delta, float chartPlaySpeed)
         {
-            NoteRenderer.Move(delta, chartPlaySpeed);
+            var transform = Transform;
+
+            var zPos = Transform.Origin.Z + chartPlaySpeed * (float)delta;
+            transform.Origin.Z = zPos;
+
+            Transform = transform;
         }
 
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)

@@ -19,6 +19,11 @@ namespace Plutono.Core.Note
             throw new NotImplementedException();
         }
 
+        public void Move(double delta, float chartPlaySpeed)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ShouldMiss()
         {
             throw new NotImplementedException();

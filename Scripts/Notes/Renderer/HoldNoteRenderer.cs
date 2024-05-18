@@ -4,7 +4,7 @@ using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note.Render
 {
-    public partial class HoldNoteRenderer : NoteRenderer, IRendererHold
+    public partial class HoldNoteRenderer : NoteRenderer, IRendererHoldable
     {
         [Export] public Sprite3D head;
         [Export] public Sprite3D body;

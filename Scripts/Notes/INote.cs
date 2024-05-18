@@ -8,6 +8,7 @@ namespace Plutono.Core.Note
 
     public interface IMovable : INote
     {
+        public void Move(double delta, float chartPlaySpeed);
         public bool ShouldMiss();
 
         /// <summary>
