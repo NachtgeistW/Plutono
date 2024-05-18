@@ -23,6 +23,7 @@ public partial class InputController : Node
                     EventCenter.Broadcast(new FingerDownEvent {WorldPos = new Vector3(-1, 0, 0), Time = 10});
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
+                Debug.Log(ScreenToWorldPoint(Game.Camera, eventMouseButton.Position));
             }
         }
 
@@ -37,6 +38,17 @@ public partial class InputController : Node
                 EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
             }
         }
+    }
+
+    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
+    {
+        var dropPlane = new Plane(new Vector3(0, 0, 1), 0);
+
+        //TODO: Solve this type cast
+        return (Vector3)dropPlane.IntersectsRay(
+            camera.ProjectRayOrigin(localPos),
+            camera.ProjectRayNormal(localPos));
+
     }
 }
 

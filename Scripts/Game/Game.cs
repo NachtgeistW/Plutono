@@ -5,6 +5,8 @@ namespace Plutono.Scripts.Game;
 
 public partial class Game : Node3D
 {
+    [Export] public Camera3D Camera { get; set; }
+
     protected float chartPlaySpeed = 10f;
 
     public GameMode Mode { get; private set; } = GameMode.Floro;

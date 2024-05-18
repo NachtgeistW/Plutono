@@ -233,8 +233,9 @@ animations = [{
 "speed": 50.0
 }]
 
-[node name="Game" type="Node3D"]
+[node name="Game" type="Node3D" node_paths=PackedStringArray("Camera")]
 script = ExtResource("1_2xpy6")
+Camera = NodePath("Camera3D")
 
 [node name="Controllers" type="Node3D" parent="."]
 
