@@ -29,6 +29,14 @@ namespace Plutono.Scripts.Notes
             NoteRenderer = noteRenderer;
         }
 
+        public override void _Ready()
+        {
+            base._Ready();
+
+            NoteRenderer.OnNoteLoaded();
+        }
+
+
         public void Move(double delta, float chartPlaySpeed)
         {
             NoteRenderer.Move(delta, chartPlaySpeed);

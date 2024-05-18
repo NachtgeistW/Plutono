@@ -11,9 +11,9 @@ namespace Plutono.Core.Note
         public bool ShouldMiss();
 
         /// <summary>
-        /// note 是否被触摸（点击、按着或滑动）
+        /// note 鏄惁琚Е鎽革紙鐐瑰嚮銆佹寜鐫�鎴栨粦鍔級
         /// </summary>
-        /// <returns>只要有一只手指按住就返回 true</returns>
+        /// <returns>鍙鏈変竴鍙墜鎸囨寜浣忓氨杩斿洖 true</returns>
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime);
 
         public void OnClear(NoteGrade grade);

@@ -28,6 +28,11 @@ namespace Plutono.Core.Note.Render
             explosion.AnimationFinished -= OnExplosionAnimateFinish;
         }
 
+        public void OnNoteLoaded()
+        {
+            explosion.Visible = false;
+        }
+
         public void Move(double elapsedTime, float chartPlaySpeed)
         {
             var transform = Transform;
