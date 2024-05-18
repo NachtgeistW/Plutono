@@ -33,7 +33,7 @@ namespace Plutono.Scripts.Notes
         {
             base._Ready();
 
-            NoteRenderer.OnNoteLoaded();
+            //NoteRenderer.OnNoteLoaded();
         }
 
 

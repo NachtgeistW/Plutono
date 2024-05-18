@@ -1,133 +1,129 @@
-[gd_scene load_steps=41 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=37 format=3 uid="uid://c8l848uwhxlxv"]
 
-[ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_2xpy6"]
-[ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
-[ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
-[ext_resource type="Script" path="res://Scripts/Game/NoteController.cs" id="3_gb8kx"]
-[ext_resource type="Script" path="res://Scripts/Game/JudgeController.cs" id="4_edq2k"]
-[ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://Textures/02.png" id="6_iwybc"]
-[ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
-[ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
-[ext_resource type="PackedScene" uid="uid://c8l848uwhxlxv" path="res://Prefabs/blank_note.tscn" id="8_dye54"]
+[ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="1_6viyx"]
+[ext_resource type="Script" path="res://Scripts/Notes/Renderer/TapNoteRenderer.cs" id="2_3dkfc"]
+[ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="3_y507t"]
+[ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://Textures/02.png" id="4_3h0fw"]
+[ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="5_458vt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82cx"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_svkrv"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_budss"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg1u"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aler1"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(256, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yj6s7"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mr234"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(384, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_omg4n"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(448, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fphp7"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(0, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3fxdq"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(64, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iq153"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(128, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i3cpe"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(192, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1qqgw"]
-atlas = ExtResource("6_iwybc")
+atlas = ExtResource("4_3h0fw")
 region = Rect2(256, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k4xsx"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aymmk"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5d5fy"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_obecp"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8txne"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(256, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_urusq"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0fydb"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(384, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hhwib"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(448, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bbony"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(0, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vt5qv"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(64, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b1dnt"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(128, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3uj47"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(192, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1827d"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(256, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uk2y1"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(320, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mkdaq"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(384, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rb4ho"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(448, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e43gs"]
-atlas = ExtResource("6_qqv3p")
+atlas = ExtResource("5_458vt")
 region = Rect2(0, 128, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vluo7"]
@@ -233,64 +229,24 @@ animations = [{
 "speed": 50.0
 }]
 
-[node name="Game" type="Node3D"]
-script = ExtResource("1_2xpy6")
+[node name="BlankNote" type="Node3D" node_paths=PackedStringArray("NoteRenderer")]
+script = ExtResource("1_6viyx")
+NoteRenderer = NodePath("Renderer")
 
-[node name="Controllers" type="Node3D" parent="."]
+[node name="Renderer" type="Node3D" parent="." node_paths=PackedStringArray("noteSprite", "explosion")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+script = ExtResource("2_3dkfc")
+noteSprite = NodePath("Note")
+explosion = NodePath("Explosion")
 
-[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game")]
-script = ExtResource("2_jx4w1")
-Game = NodePath("../..")
+[node name="Note" type="Sprite3D" parent="Renderer"]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+axis = 1
+render_priority = 1
+texture = ExtResource("3_y507t")
 
-[node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "blankNote2", "holdNote")]
-script = ExtResource("3_gb8kx")
-blankNote = NodePath("../../Stage/Notes/BlankNote")
-blankNote2 = NodePath("../../Stage/Notes/BlankNote2")
-holdNote = NodePath("../../Stage/Notes/HoldNote")
-
-[node name="JudgeController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("NoteControl", "Game")]
-script = ExtResource("4_edq2k")
-NoteControl = NodePath("../NoteController")
-Game = NodePath("../..")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 5)
-fov = 90.0
-
-[node name="Stage" type="Node3D" parent="."]
-metadata/_edit_lock_ = true
-
-[node name="Explosion2" type="Node3D" parent="Stage"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
-
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="Stage/Explosion2"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
-visible = false
+[node name="Explosion" type="AnimatedSprite3D" parent="Renderer"]
+transform = Transform3D(8, 0, 0, 0, 6.9282, 4, 0, -4, 6.9282, 0, 0, 0)
 render_priority = 2
 sprite_frames = SubResource("SpriteFrames_vluo7")
 animation = &"perfect"
-
-[node name="Judgline" type="Node3D" parent="Stage"]
-
-[node name="Sprite_Judgline" type="Sprite3D" parent="Stage/Judgline"]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, 0)
-axis = 1
-render_priority = -10
-texture = ExtResource("1_78axj")
-
-[node name="Notes" type="Node3D" parent="Stage"]
-
-[node name="BlankNote" parent="Stage/Notes" instance=ExtResource("8_dye54")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
-
-[node name="BlankNote2" parent="Stage/Notes" instance=ExtResource("8_dye54")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -30)
-
-[node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -10)
-
-[node name="GUI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
