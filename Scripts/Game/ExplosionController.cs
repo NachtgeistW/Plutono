@@ -6,8 +6,6 @@ namespace Plutono.Scripts.Game;
 
 public partial class ExplosionController : Node
 {
-    [Export] private AnimatedSprite3D animate;
-
     public override void _EnterTree()
     {
         base._EnterTree();
@@ -22,5 +20,5 @@ public partial class ExplosionController : Node
         EventCenter.RemoveListener<NoteClearEvent<BlankNote>>(Explode);
     }
 
-    private static void Explode(NoteClearEvent<BlankNote> evt) => evt.Note.NoteRenderer.OnClear(evt.Grade);
+    private static void Explode(NoteClearEvent<BlankNote> evt) => System.Linq.Expressions.Expression.Empty();
 }

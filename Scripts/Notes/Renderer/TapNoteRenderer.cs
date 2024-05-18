@@ -28,6 +28,11 @@ namespace Plutono.Core.Note.Render
             explosion.AnimationFinished -= OnExplosionAnimateFinish;
         }
 
+        public void OnNoteLoaded()
+        {
+            explosion.Visible = false;
+        }
+
         public void Move(double elapsedTime, float chartPlaySpeed)
         {
             var transform = Transform;
@@ -36,6 +41,11 @@ namespace Plutono.Core.Note.Render
             transform.Origin.Z = zPos;
 
             Transform = transform;
+        }
+
+        public void OnTouch(NoteGrade grade)
+        {
+            throw new NotImplementedException();
         }
 
         public void OnClear(NoteGrade grade)
@@ -72,7 +82,7 @@ namespace Plutono.Core.Note.Render
         }
 
 
-        public void Render(Note note)
+        public void Render()
         {
             throw new System.NotImplementedException();
         }

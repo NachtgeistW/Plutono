@@ -1,13 +1,12 @@
-[gd_scene load_steps=43 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=42 format=3 uid="uid://0xp641m4eog6"]
 
+[ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_2xpy6"]
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
-[ext_resource type="Script" path="res://Scripts/Game/Gameplay.cs" id="1_mbsmc"]
 [ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
 [ext_resource type="Script" path="res://Scripts/Game/NoteController.cs" id="3_gb8kx"]
 [ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="3_m7hjw"]
 [ext_resource type="Script" path="res://Scripts/Game/JudgeController.cs" id="4_edq2k"]
 [ext_resource type="Script" path="res://Scripts/Notes/Renderer/TapNoteRenderer.cs" id="5_vb7qn"]
-[ext_resource type="Script" path="res://Scripts/Game/ExplosionController.cs" id="5_xm241"]
 [ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://Textures/02.png" id="6_iwybc"]
 [ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
@@ -236,14 +235,13 @@ animations = [{
 }]
 
 [node name="Game" type="Node3D"]
-script = ExtResource("1_mbsmc")
+script = ExtResource("1_2xpy6")
 
 [node name="Controllers" type="Node3D" parent="."]
 
-[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "holdNote")]
+[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game")]
 script = ExtResource("2_jx4w1")
-blankNote = NodePath("../../Stage/Notes/BlankNote")
-holdNote = NodePath("../../Stage/Notes/HoldNote")
+Game = NodePath("../..")
 
 [node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "holdNote")]
 script = ExtResource("3_gb8kx")
@@ -254,10 +252,6 @@ holdNote = NodePath("../../Stage/Notes/HoldNote")
 script = ExtResource("4_edq2k")
 NoteControl = NodePath("../NoteController")
 Game = NodePath("../..")
-
-[node name="Explosion" type="Node3D" parent="Controllers" node_paths=PackedStringArray("animate")]
-script = ExtResource("5_xm241")
-animate = NodePath("../../Stage/Notes/BlankNote/Renderer/Explosion")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 5)
@@ -308,11 +302,8 @@ render_priority = 2
 sprite_frames = SubResource("SpriteFrames_vluo7")
 animation = &"perfect"
 
-[node name="Explosion" type="Node3D" parent="Stage/Notes/BlankNote"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
-
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -10)
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3

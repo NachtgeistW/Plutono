@@ -14,6 +14,11 @@ namespace Plutono.Core.Note
             throw new NotImplementedException();
         }
 
+        public void Initialize(float chartPlaySpeed)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ShouldMiss()
         {
             throw new NotImplementedException();
@@ -35,6 +40,11 @@ namespace Plutono.Core.Note
                 deltaTime = double.MaxValue;
                 return false;
             }
+        }
+
+        public void OnClear(NoteGrade grade)
+        {
+            throw new NotImplementedException();
         }
 
         public bool OnTap(Vector2 worldPos, double hitTime, out double deltaTime, out float deltaXPos)
