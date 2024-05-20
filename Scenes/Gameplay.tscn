@@ -235,7 +235,7 @@ animations = [{
 
 [node name="Game" type="Node3D" node_paths=PackedStringArray("Camera")]
 script = ExtResource("1_2xpy6")
-Camera = NodePath("Camera3D")
+Camera = NodePath("Camera/Orthographic Camera")
 
 [node name="Controllers" type="Node3D" parent="."]
 
@@ -254,9 +254,18 @@ script = ExtResource("4_edq2k")
 NoteControl = NodePath("../NoteController")
 Game = NodePath("../..")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera" type="Node3D" parent="."]
+
+[node name="Game Camera" type="Camera3D" parent="Camera"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 5)
+current = true
 fov = 90.0
+
+[node name="Orthographic Camera" type="Camera3D" parent="Camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+projection = 1
+size = 10.0
+far = 164.21
 
 [node name="Stage" type="Node3D" parent="."]
 metadata/_edit_lock_ = true

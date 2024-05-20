@@ -40,15 +40,18 @@ public partial class InputController : Node
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="camera"></param>
+    /// <param name="localPos"></param>
+    /// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
     private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
     {
         var dropPlane = new Plane(new Vector3(0, 0, 1), 0);
-
-        //TODO: Solve this type cast
-        return (Vector3)dropPlane.IntersectsRay(
+        return dropPlane.IntersectsRay(
             camera.ProjectRayOrigin(localPos),
-            camera.ProjectRayNormal(localPos));
-
+            camera.ProjectRayNormal(localPos)) ?? Vector3.Inf;
     }
 }
 
