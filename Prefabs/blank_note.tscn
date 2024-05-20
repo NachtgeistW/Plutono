@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://c8l848uwhxlxv"]
+[gd_scene load_steps=37 format=3 uid="uid://bwbadsckvqk1j"]
 
 [ext_resource type="Script" path="res://Scripts/Notes/BlankNote.cs" id="1_6viyx"]
 [ext_resource type="Script" path="res://Scripts/Notes/Renderer/TapNoteRenderer.cs" id="2_3dkfc"]
