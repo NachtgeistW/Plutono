@@ -61,10 +61,15 @@ namespace Plutono.Core.Note.Render
                     var transform = Transform;
                     transform.Origin.Z = 0;
                     Transform = transform;
+                    explosion.Modulate = new Color("ffd000");
                     explosion.Play("perfect");
                     break;
                 case NoteGrade.Good:
+                    explosion.Modulate = new Color("00b300");
+                    explosion.Play("good");
+                    break;
                 case NoteGrade.Bad:
+                    explosion.Modulate = new Color("0079ff");
                     explosion.Play("good");
                     break;
                 case NoteGrade.Miss:
