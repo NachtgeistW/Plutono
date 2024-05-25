@@ -21,10 +21,10 @@ public partial class InputController : Node
                 {
                     Debug.Log("Released");
                     var pos = ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position);
-                    EventCenter.Broadcast(new FingerDownEvent {WorldPos = pos, Time = 10});
+                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = Game.CurTime });
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position));
+                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), Game.CurTime);
             }
         }
 

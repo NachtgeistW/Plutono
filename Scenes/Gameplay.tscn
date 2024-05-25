@@ -233,9 +233,10 @@ animations = [{
 "speed": 50.0
 }]
 
-[node name="Game" type="Node3D" node_paths=PackedStringArray("OrthographicCamera")]
+[node name="Game" type="Node3D" node_paths=PackedStringArray("OrthographicCamera", "curTimeText")]
 script = ExtResource("1_2xpy6")
 OrthographicCamera = NodePath("Camera/Orthographic Camera")
+curTimeText = NodePath("GUI/CurTimeText")
 
 [node name="Controllers" type="Node3D" parent="."]
 
@@ -305,3 +306,9 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="CurTimeText" type="RichTextLabel" parent="GUI"]
+layout_mode = 0
+offset_right = 305.0
+offset_bottom = 40.0
+text = "当前时间"
