@@ -58,7 +58,7 @@ namespace Plutono.Core.Note
     {
         public void OnHoldStart(Vector3 worldPos, double curTime);
         public void UpdateHold(Vector3 worldPos, double curTime);
-        public void OnHoldEnd();
+        public void OnHoldEnd(NoteGrade grade);
         public void OnHoldMiss();
     }
 

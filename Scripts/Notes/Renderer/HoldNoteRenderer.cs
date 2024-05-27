@@ -90,6 +90,7 @@ namespace Plutono.Core.Note.Render
 			if (!note.IsClear && note.IsHolding && !explosion.IsPlaying())
 			{
 				explosion.Visible = true;
+                explosion.Modulate = new Color("ffd000");
 				explosion.Play("good_start");
 			}
 		}
@@ -112,8 +113,28 @@ namespace Plutono.Core.Note.Render
 
 		public void OnClear(NoteGrade grade)
 		{
-			//Call the effect controller to play hit effect
-			explosion.Play("good_end");
+            switch (grade)
+            {
+				case NoteGrade.Perfect:
+                    explosion.Modulate = new Color("ffd000");
+                    explosion.Play("perfect_end");
+                    break;
+                case NoteGrade.Good:
+                    explosion.Modulate = new Color("00b300");
+                    explosion.Play("good_end");
+                    break;
+                case NoteGrade.Bad:
+                    explosion.Modulate = new Color("0079ff");
+                    explosion.Play("good_end");
+                    break;
+                case NoteGrade.Miss:
+                    explosion.Modulate = new Color("494949");
+                    explosion.Play("good_end");
+					break;
+                case NoteGrade.None:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
+            }
 		}
 
 		public void OnDispose()

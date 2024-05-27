@@ -105,7 +105,9 @@ public partial class JudgeController : Node3D
         if (notesOnHolding.TryGetValue(evt.Finger.Index, out var note))
         {
             if (note.IsClear) return;
-            note.OnHoldEnd();
+
+            var endGrade = GetNoteGrade(Math.Abs(Game.CurTime - note.endTime), Game.Mode);
+            note.OnHoldEnd(endGrade);
             notesOnHolding.Remove(evt.Finger.Index);
 #if DEBUG
             Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
@@ -202,7 +204,7 @@ public partial class JudgeController : Node3D
     /// <summary>
     /// 确定某个note在当前游戏设定下的Grade
     /// </summary>
-    private NoteGrade GetNoteGrade(double interval, GameMode mode)
+    private static NoteGrade GetNoteGrade(double interval, GameMode mode)
     {
         return mode switch
         {
