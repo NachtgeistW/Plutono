@@ -49,7 +49,7 @@ public partial class InputController : Node
     /// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
     private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
     {
-        var dropPlane = new Plane(new Vector3(0, 0, 1), 0);
+        var dropPlane = new Plane(new Vector3(0, 0, 5), 0);
         return dropPlane.IntersectsRay(
             camera.ProjectRayOrigin(localPos),
             camera.ProjectRayNormal(localPos)) ?? Vector3.Inf;
