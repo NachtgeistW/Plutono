@@ -451,4 +451,4 @@ texture = ExtResource("3_xuw4j")
 transform = Transform3D(8, 0, 0, 0, 6.9282, 4, 0, -4, 6.9282, 0, 0, 10)
 render_priority = 2
 sprite_frames = SubResource("SpriteFrames_21bvj")
-animation = &"perfect_end"
+animation = &"perfect_start"

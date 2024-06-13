@@ -8,14 +8,7 @@ public interface INoteRenderer
     public void OnDispose();
 }
 
-public interface IRendererMovable : INoteRenderer
-{
-    public void Move(double elapsedTime, float chartPlaySpeed);
-    public void OnClear(NoteGrade grade);
-    public void OnTouch(NoteGrade grade);
-}
-
-public interface IRendererHold : INoteRenderer
+public interface IRendererHoldable : INoteRenderer
 {
     public void OnNoteLoaded();
     public void UpdateComponentStates();
@@ -23,7 +16,8 @@ public interface IRendererHold : INoteRenderer
     public void UpdateTransformScale();
 }
 
-public interface IRendererTouchable : IRendererMovable
+public interface IRendererTouchable : INoteRenderer
 {
-
+    public void OnTouch(NoteGrade grade);
+    public void OnClear(NoteGrade grade);
 }

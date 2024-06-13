@@ -11,6 +11,7 @@ public partial class NoteController : Node3D
     public List<HoldNote> HoldNotes { get; } = new();
 
     [Export] BlankNote blankNote;
+    [Export] BlankNote blankNote2;
     [Export] HoldNote holdNote;
 
     protected float chartPlaySpeed = 10f;
@@ -39,7 +40,11 @@ public partial class NoteController : Node3D
     {
         base._Ready();
 
+        blankNote.data = new BlankNoteData(1, 0, 1.2, 1.5);
+        blankNote2.data = new BlankNoteData(1, -10f, 1.2, 3);
+
         BlankNotes.Add(blankNote);
+        BlankNotes.Add(blankNote2);
 
         HoldNotes.Add(holdNote);
     }

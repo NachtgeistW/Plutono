@@ -107,7 +107,7 @@ namespace Plutono.Core.Note
                 //TODO:Verify 0.001
                 if (HoldingLength - HeldDuration < 0.0001)
                 {
-                    OnHoldEnd();
+                    OnHoldEnd(NoteGrade.Perfect);
                 }
             }
             else
@@ -144,7 +144,7 @@ namespace Plutono.Core.Note
             */
         }
 
-        public void OnHoldEnd()
+        public void OnHoldEnd(NoteGrade grade)
         {
             /*
                 统计分数和生成特效
@@ -154,7 +154,7 @@ namespace Plutono.Core.Note
             Debug.Log($"OnHoldEnd");
             IsHolding = false;
             IsClear = true;
-            OnClear(NoteGrade.None);
+            OnClear(grade);
             QueueFree();
         }
 

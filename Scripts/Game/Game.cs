@@ -5,14 +5,17 @@ namespace Plutono.Scripts.Game;
 
 public partial class Game : Node3D
 {
-    protected float chartPlaySpeed = 10f;
+	[Export] public Camera3D OrthographicCamera { get; set; }
+	[Export] public RichTextLabel curTimeText { get; set; }
 
-    public GameMode Mode { get; private set; } = GameMode.Floro;
+	protected float chartPlaySpeed = 10f;
+	public GameMode Mode { get; private set; } = GameMode.Floro;
+	public double CurTime { get; private set; }
 
-    public double CurTime { get; private set; }
+	public override void _Process(double delta)
+	{
+		CurTime += delta;
 
-    public override void _Process(double delta)
-    {
-        CurTime += delta;
-    }
+		curTimeText.Text = CurTime.ToString();
+	}
 }
