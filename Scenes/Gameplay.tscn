@@ -285,7 +285,7 @@ animation = &"perfect"
 [node name="Judgline" type="Node3D" parent="Stage"]
 
 [node name="Sprite_Judgline" type="Sprite3D" parent="Stage/Judgline"]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, 0)
+transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, 0)
 axis = 1
 render_priority = -10
 texture = ExtResource("1_78axj")
