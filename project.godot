@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Plutono"
+config/name="plutono"
 run/main_scene="res://Scenes/Gameplay.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
 config/icon="res://icon.svg"

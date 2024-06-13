@@ -1,11 +1,29 @@
 using Godot;
-using Plutono.Scripts.Game;
-using Plutono.Scripts.Utils;
-using Plutono.Util;
+using Plutono.Core.Note;
+using System;
+using System.Collections.Generic;
 
 public partial class InputController : Node
 {
-    [Export] private Game Game { get; set; }
+    public double curTime;
+
+    //public readonly Dictionary<int, FlickNote> FlickingNotes = new Dictionary<int, FlickNote>(); // Finger index to note
+    public readonly Dictionary<int, HoldNote> HoldingNotes = new(); // Finger index to note
+    public readonly List<HoldNote> TouchableHoldNotes = new(); // Hold
+    public readonly List<MovableNote> TouchableNormalNotes = new(); // Piano, Blank, Hold, Flick
+
+    public void OnNoteCollected(MovableNote note)
+    {
+        if (note is HoldNote)
+        {
+            HoldingNotes.Clear();
+        }
+    }
+
+    [Export] BlankNote blankNote;
+    [Export] HoldNote holdNote;
+
+    [Export] Godot.GpuParticles3D explosion;
 
     public override void _Input(InputEvent @event)
     {
@@ -15,16 +33,18 @@ public partial class InputController : Node
             {
                 if (eventMouseButton.IsPressed())
                 {
-                    Debug.Log("Pressed");
+                    GD.Print("Pressed");
                 }
                 else
-                {
-                    Debug.Log("Released");
-                    var pos = ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position);
-                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = Game.CurTime });
-                }
-                Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position).X, " ", Game.CurTime);
+                    GD.Print("Released");
+                GD.Print("Mouse Click/Unclick at: ", eventMouseButton.Position);
+
+                // var transform = explosion.Transform;
+                // transform.Origin = new Vector3(blankNote.Transform.Origin.X, transform.Origin.Y, transform.Origin.Z);
+                // explosion.Transform = transform;
+                // explosion.Emitting = true;
+
+                blankNote.QueueFree();
             }
         }
 
@@ -32,53 +52,22 @@ public partial class InputController : Node
         {
             if (eventKey.IsPressed())
             {
-                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                holdNote.OnHoldStart(Vector2.Zero, (float)curTime);
             }
             else
             {
-                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                holdNote.OnHoldEnd();
             }
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="camera"></param>
-    /// <param name="localPos"></param>
-    /// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
-    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
+    public override void _Process(double delta)
     {
-        var dropPlane = new Plane(new Vector3(0, 0, 5), 0);
-        return dropPlane.IntersectsRay(
-            camera.ProjectRayOrigin(localPos),
-            camera.ProjectRayNormal(localPos)) ?? Vector3.Inf;
+        base._Process(delta);
+
+        curTime += delta;
+        if (holdNote.IsHolding)
+            holdNote.UpdateHold(Vector2.Zero, (float)curTime);
     }
-}
 
-public struct FingerDownEvent : IEvent
-{
-    public Finger Finger;
-    public Vector3 WorldPos;
-    public double Time;
-}
-
-public struct FingerMoveEvent : IEvent
-{
-    public Finger Finger;
-    public Vector3 WorldPos;
-    public double Time;
-}
-
-public struct FingerUpEvent : IEvent
-{
-    public Finger Finger;
-    public Vector3 WorldPos;
-    public double Time;
-}
-
-public struct Finger
-{
-    public Vector2 Position;
-    public int Index;
 }
