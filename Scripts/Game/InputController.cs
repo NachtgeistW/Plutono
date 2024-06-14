@@ -24,7 +24,7 @@ public partial class InputController : Node
                     EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = Game.CurTime });
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position).X, " ", Game.CurTime);
+                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", Game.CurTime);
             }
         }
 
@@ -45,14 +45,11 @@ public partial class InputController : Node
     /// 
     /// </summary>
     /// <param name="camera"></param>
-    /// <param name="localPos"></param>
+    /// <param name="screenPos"></param>
     /// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
-    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
+    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 screenPos)
     {
-        var dropPlane = new Plane(new Vector3(0, 0, 5), 0);
-        return dropPlane.IntersectsRay(
-            camera.ProjectRayOrigin(localPos),
-            camera.ProjectRayNormal(localPos)) ?? Vector3.Inf;
+        return camera.ProjectPosition(screenPos, camera.GlobalTransform.Origin.Z);
     }
 }
 
