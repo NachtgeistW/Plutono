@@ -6,6 +6,8 @@ using Plutono.Util;
 public partial class InputController : Node
 {
     [Export] private Game Game { get; set; }
+    [Export] private TimeController TimeControl { get; set; }
+
 
     public override void _Input(InputEvent @event)
     {
@@ -21,10 +23,10 @@ public partial class InputController : Node
                 {
                     Debug.Log("Released");
                     var pos = ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position);
-                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = Game.CurTime });
+                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = TimeControl.CurTime });
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", Game.CurTime);
+                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
             }
         }
 
@@ -32,11 +34,11 @@ public partial class InputController : Node
         {
             if (eventKey.IsPressed())
             {
-                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
             }
             else
             {
-                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
             }
         }
     }

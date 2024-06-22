@@ -1,14 +1,16 @@
-[gd_scene load_steps=41 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=43 format=3 uid="uid://0xp641m4eog6"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_2xpy6"]
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
 [ext_resource type="Script" path="res://Scripts/Game/InputController.cs" id="2_jx4w1"]
+[ext_resource type="Script" path="res://Scripts/Game/TimeController.cs" id="2_ru3fu"]
 [ext_resource type="Script" path="res://Scripts/Game/NoteController.cs" id="3_gb8kx"]
 [ext_resource type="Script" path="res://Scripts/Game/JudgeController.cs" id="4_edq2k"]
 [ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://Textures/02.png" id="6_iwybc"]
 [ext_resource type="PackedScene" uid="uid://blmrt3wqw10a8" path="res://Prefabs/hold_note.tscn" id="6_og43b"]
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
 [ext_resource type="PackedScene" uid="uid://bwbadsckvqk1j" path="res://Prefabs/blank_note.tscn" id="8_dye54"]
+[ext_resource type="AudioStream" uid="uid://cb043v34t5kq7" path="res://Sheets/little_cry_remix_offvocal.mp3" id="10_lnjxm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82cx"]
 atlas = ExtResource("6_iwybc")
@@ -233,16 +235,22 @@ animations = [{
 "speed": 50.0
 }]
 
-[node name="Game" type="Node3D" node_paths=PackedStringArray("OrthographicCamera", "curTimeText")]
+[node name="Game" type="Node3D" node_paths=PackedStringArray("TimeControl", "OrthographicCamera", "CurTimeText")]
 script = ExtResource("1_2xpy6")
+TimeControl = NodePath("Controllers/TimeController")
 OrthographicCamera = NodePath("Camera/Orthographic Camera")
-curTimeText = NodePath("GUI/CurTimeText")
+CurTimeText = NodePath("GUI/CurTimeText")
 
 [node name="Controllers" type="Node3D" parent="."]
 
-[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game")]
+[node name="TimeController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("player")]
+script = ExtResource("2_ru3fu")
+player = NodePath("../../Player")
+
+[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl")]
 script = ExtResource("2_jx4w1")
 Game = NodePath("../..")
+TimeControl = NodePath("../TimeController")
 
 [node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "blankNote2", "holdNote")]
 script = ExtResource("3_gb8kx")
@@ -250,10 +258,11 @@ blankNote = NodePath("../../Stage/Notes/BlankNote")
 blankNote2 = NodePath("../../Stage/Notes/BlankNote2")
 holdNote = NodePath("../../Stage/Notes/HoldNote")
 
-[node name="JudgeController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("NoteControl", "Game")]
+[node name="JudgeController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "NoteControl", "TimeControl")]
 script = ExtResource("4_edq2k")
-NoteControl = NodePath("../NoteController")
 Game = NodePath("../..")
+NoteControl = NodePath("../NoteController")
+TimeControl = NodePath("../TimeController")
 
 [node name="Camera" type="Node3D" parent="."]
 
@@ -312,3 +321,6 @@ layout_mode = 0
 offset_right = 305.0
 offset_bottom = 40.0
 text = "当前时间"
+
+[node name="Player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_lnjxm")

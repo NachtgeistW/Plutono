@@ -5,14 +5,15 @@ using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Utils;
 using Plutono.Util;
-using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 namespace Plutono.Scripts.Game;
 
 public partial class JudgeController : Node3D
 {
-    [Export] private NoteController NoteControl { get; set; }
     [Export] private Game Game { get; set; }
+
+    [Export] private NoteController NoteControl { get; set; }
+    [Export] private TimeController TimeControl { get; set; }
 
     //private readonly Dictionary<int, SlideNote> notesOnSliding = new(); //Finger index and sliding note on it
     private readonly Dictionary<int, HoldNote> notesOnHolding= new(); //Finger index and holding note on it
@@ -45,7 +46,7 @@ public partial class JudgeController : Node3D
         foreach (var note in notesOnHolding)
         {
             if (note.Value.IsHolding)
-                note.Value.UpdateHold(Vector3.Zero, Game.CurTime);
+                note.Value.UpdateHold(Vector3.Zero, TimeControl.CurTime);
         }
     }
 
@@ -106,7 +107,7 @@ public partial class JudgeController : Node3D
         {
             if (note.IsClear) return;
 
-            var endGrade = GetNoteGrade(Math.Abs(Game.CurTime - note.endTime), Game.Mode);
+            var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.endTime), Game.Mode);
             note.OnHoldEnd(endGrade);
             notesOnHolding.Remove(evt.Finger.Index);
 #if DEBUG
