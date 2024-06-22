@@ -12,7 +12,7 @@ public partial class Game : Node3D
     [Export] public Camera3D OrthographicCamera { get; set; }
     [Export] public RichTextLabel CurTimeText { get; set; }
 
-    protected float ChartPlaySpeed = 10f;
+    public float ChartPlaySpeed { get; internal set; } = 5f;
     public GameMode Mode { get; private set; } = GameMode.Floro;
 
 

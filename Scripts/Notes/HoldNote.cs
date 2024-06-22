@@ -12,8 +12,8 @@ namespace Plutono.Core.Note
 
         private float chartPlaySpeed;
 
-        public float beginTime { get; private set; } = 0f;
-        public float endTime { get; private set; } = 10f;
+        public float beginTime { get; private set; } = 1f;
+        public float endTime { get; private set; } = 11f;
         protected float HoldingLength;
 
         [Export] private Render.HoldNoteRenderer NoteRenderer { get; set; }
@@ -28,13 +28,13 @@ namespace Plutono.Core.Note
 
         public HoldNote()
         {
-            data = new HoldNoteData(1, 3, 1.2, 10);
+            data = new HoldNoteData(1, 3, 1.2, 1);
             chartPlaySpeed = 10f;
         }
 
         public HoldNote(float playSpeed)
         {
-            data = new HoldNoteData(1, 3, 1.2, 10);
+            data = new HoldNoteData(1, 3, 1.2, 1);
             chartPlaySpeed = playSpeed;
         }
 
@@ -43,7 +43,7 @@ namespace Plutono.Core.Note
             base._Ready();
 
             HoldingLength = endTime - beginTime;
-            NoteRenderer.OnNoteLoaded();
+            NoteRenderer.OnNoteLoaded(chartPlaySpeed);
         }
 
         public override void _Process(double delta)
@@ -53,9 +53,14 @@ namespace Plutono.Core.Note
             nowTime += delta;
         }
 
-        public void Move(double delta, float chartPlaySpeed)
+        public void Move(double curTime, float chartPlaySpeed)
         {
-            NoteRenderer.Move(delta, chartPlaySpeed);
+            var transform = Transform;
+
+            var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (data.time - curTime));
+            transform.Origin.Z = -zPos;
+
+            Transform = transform;
         }
 
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)

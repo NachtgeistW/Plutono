@@ -252,8 +252,10 @@ script = ExtResource("2_jx4w1")
 Game = NodePath("../..")
 TimeControl = NodePath("../TimeController")
 
-[node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("blankNote", "blankNote2", "holdNote")]
+[node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl", "blankNote", "blankNote2", "holdNote")]
 script = ExtResource("3_gb8kx")
+Game = NodePath("../..")
+TimeControl = NodePath("../TimeController")
 blankNote = NodePath("../../Stage/Notes/BlankNote")
 blankNote2 = NodePath("../../Stage/Notes/BlankNote2")
 holdNote = NodePath("../../Stage/Notes/HoldNote")

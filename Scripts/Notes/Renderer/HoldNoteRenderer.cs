@@ -47,12 +47,12 @@ namespace Plutono.Core.Note.Render
 		#endregion
 
 
-		public void OnNoteLoaded()
+		public void OnNoteLoaded(float chartPlaySpeed)
 		{
-			var beginTime = -note.beginTime;
-			var endTime = -note.endTime;
+			var beginTime = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(chartPlaySpeed) * note.beginTime);
+
+            var endTime = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(chartPlaySpeed) * note.endTime);
 			var length = beginTime - endTime;
-			Debug.Log(length);
 
 			var headTransform = head.Transform;
 			var endTransform = end.Transform;
@@ -69,13 +69,7 @@ namespace Plutono.Core.Note.Render
 			body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
 
 			explosion.Visible = false;
-		}
-
-		public void Move(double elapsedTime, float chartPlaySpeed)
-		{
-			var transform = node.Transform;
-			transform.Origin.Z += chartPlaySpeed * (float)elapsedTime;
-			node.Transform = transform;
+			explosion.Position = head.Position;
 		}
 
 		public void Render()

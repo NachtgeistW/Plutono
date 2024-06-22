@@ -7,14 +7,15 @@ using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 public partial class NoteController : Node3D
 {
+    [Export] private Game Game { get; set; }
+    [Export] private TimeController TimeControl { get; set; }
+
     public List<BlankNote> BlankNotes { get; } = new();
     public List<HoldNote> HoldNotes { get; } = new();
 
     [Export] BlankNote blankNote;
     [Export] BlankNote blankNote2;
     [Export] HoldNote holdNote;
-
-    protected float chartPlaySpeed = 10f;
 
     #region Event
 
@@ -53,19 +54,19 @@ public partial class NoteController : Node3D
     {
         base._Process(delta);
 
-        UpdateNotes(delta);
+        UpdateNotes(TimeControl.CurTime, Game.ChartPlaySpeed);
     }
 
-    public void UpdateNotes(double delta)
+    public void UpdateNotes(double curTime, float chartPlaySpeed)
     {
         foreach (var note in BlankNotes)
         {
-            note.Move(delta, chartPlaySpeed);
+            note.Move(curTime, chartPlaySpeed);
         }
 
         foreach (var note in HoldNotes)
         {
-            note.Move(delta, chartPlaySpeed);
+            note.Move(curTime, chartPlaySpeed);
         }
     }
 

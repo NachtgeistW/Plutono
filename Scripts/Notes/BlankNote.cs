@@ -36,14 +36,21 @@ namespace Plutono.Scripts.Notes
             NoteRenderer.OnNoteLoaded();
         }
 
-        public void Move(double delta, float chartPlaySpeed)
+        public void Move(double curTime, float chartPlaySpeed)
         {
+            const float maximumNoteRange = 10f;
             var transform = Transform;
 
-            var zPos = Transform.Origin.Z + chartPlaySpeed * (float)delta;
-            transform.Origin.Z = zPos;
+            var zPos = (float)(maximumNoteRange / NoteFallTime(chartPlaySpeed) * (data.time - curTime));
+            transform.Origin.Z = -zPos;
 
             Transform = transform;
+
+            static float NoteFallTime(float chartPlaySpeed)
+            {
+                var falldownSpeedRevision = 3f;
+                return maximumNoteRange / (chartPlaySpeed * falldownSpeedRevision);
+            }
         }
 
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)

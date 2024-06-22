@@ -6,14 +6,23 @@ public interface INoteRenderer
 
     public void Render();
     public void OnDispose();
+
 }
 
 public interface IRendererHoldable : INoteRenderer
 {
-    public void OnNoteLoaded();
+    public void OnNoteLoaded(float chartPlaySpeed);
     public void UpdateComponentStates();
     public void UpdateComponentOpacity();
     public void UpdateTransformScale();
+
+    protected const float maximumNoteRange = 10f;
+    protected static float NoteFallTime(float chartPlaySpeed)
+    {
+        const float maximumNoteRange = 10f;
+        var falldownSpeedRevision = 3f;
+        return maximumNoteRange / (chartPlaySpeed * falldownSpeedRevision);
+    }
 }
 
 public interface IRendererTouchable : INoteRenderer

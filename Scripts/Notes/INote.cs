@@ -8,7 +8,7 @@ namespace Plutono.Core.Note
 
     public interface IMovable : INote
     {
-        public void Move(double delta, float chartPlaySpeed);
+        public void Move(double curTime, float chartPlaySpeed);
         public bool ShouldMiss();
 
         /// <summary>
@@ -18,6 +18,15 @@ namespace Plutono.Core.Note
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime);
 
         public void OnClear(NoteGrade grade);
+
+        protected const float maximumNoteRange = 10f;
+        protected static float NoteFallTime(float chartPlaySpeed)
+        {
+            const float maximumNoteRange = 10f;
+            var falldownSpeedRevision = 3f;
+            return maximumNoteRange / (chartPlaySpeed * falldownSpeedRevision);
+        }
+
     }
 
     public interface IPianoSoundPlayable : INote
