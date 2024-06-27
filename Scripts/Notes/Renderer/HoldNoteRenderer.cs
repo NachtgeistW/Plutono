@@ -77,52 +77,59 @@ namespace Plutono.Core.Note.Render
 
 		public void Render(double delta)
 		{
-			UpdateComponentStates();
-			UpdateComponentOpacity();
-			UpdateTransformScale(delta);
+            if (!note.IsClear && note.IsHolding)
+            {
+				UpdateComponentStates(delta);
+				UpdateComponentOpacity();
+				UpdateTransformScale(delta);
+            }
         }
 
-        public void UpdateComponentStates()
-		{
-			if (!note.IsClear && note.IsHolding && !explosion.IsPlaying())
-			{
-				explosion.Visible = true;
-                explosion.Modulate = new Color("ffd000");
-				explosion.Play("good_start");
-			}
-		}
+        public void UpdateComponentStates(double delta)
+        {
+            UpdateNotePosAndScale(delta);
+            UpdateExplosion();
 
-		public void UpdateComponentOpacity()
+            void UpdateNotePosAndScale(double delta)
+            {
+                var moveDelta = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(note.chartPlaySpeed) * delta);
+
+                var endTransform = end.Transform;
+                endTransform.Origin.Z -= moveDelta;
+                endTransform.Origin = new Vector3(endTransform.Origin.X, endTransform.Origin.Y, endTransform.Origin.Z);
+                end.Transform = endTransform;
+
+                var headPosition = head.Position.Z;
+                var length = Math.Abs(endTransform.Origin.Z - headPosition);
+
+                var bodyTransform = body.Transform;
+                bodyTransform.Origin = new Vector3(bodyTransform.Origin.X, bodyTransform.Origin.Y, headPosition - length / 2);
+                body.Transform = bodyTransform;
+                body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
+            }
+
+            void UpdateExplosion()
+            {
+                if (!explosion.IsPlaying())
+                {
+                    explosion.Visible = true;
+                    explosion.Modulate = new Color("ffd000");
+                    explosion.Play("good_start");
+                }
+            }
+        }
+
+        public void UpdateComponentOpacity()
 		{
             //TODO: UpdateComponentOpacity;
         }
 
 		public void UpdateTransformScale(double delta)
 		{
-			if (!note.IsClear && note.IsHolding)
-			{
-				// Calculate the current end position
-				var moveDelta = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(note.chartPlaySpeed) * delta);
+            //TODO: UpdateTransformScale;
+        }
 
-				// Update end position
-				var endTransform = end.Transform;
-				endTransform.Origin.Z -= moveDelta;
-                endTransform.Origin = new Vector3(endTransform.Origin.X, endTransform.Origin.Y, endTransform.Origin.Z);
-				end.Transform = endTransform;
-
-				// Calculate the new length
-				var headPosition = head.Position.Z;
-				var length = Math.Abs(endTransform.Origin.Z - headPosition);
-
-				// Update body position and scale
-				var bodyTransform = body.Transform;
-				bodyTransform.Origin = new Vector3(bodyTransform.Origin.X, bodyTransform.Origin.Y, headPosition - length / 2);
-				body.Transform = bodyTransform;
-				body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
-			}
-		}
-
-		private void OnExplosionAnimateFinish()
+        private void OnExplosionAnimateFinish()
 		{
 			explosion.Play("good_onhold");
 		}
