@@ -14,8 +14,8 @@ namespace Plutono.Core.Note
 
         public float chartPlaySpeed;
 
-        public float BeginTime { get; private set; } = 5f;
-        public float EndTime { get; private set; } = 8f;
+        public float BeginTime { get; private set; } = 1f;
+        public float EndTime { get; private set; } = 4f;
         protected float HoldingLength;
 
         [Export] private HoldNoteRenderer NoteRenderer { get; set; }
@@ -114,7 +114,7 @@ namespace Plutono.Core.Note
         {
             if (IsHolding)
             {
-                HeldDuration = (curTime - HoldingStartingTime) * chartPlaySpeed;
+                HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
                 Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
 
                 //TODO:Verify 0.001
