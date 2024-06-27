@@ -4,7 +4,7 @@ public interface INoteRenderer
 {
     public bool DisplayNoteId { get; protected set; }
 
-    public void Render();
+    public void Render(double curTime);
     public void OnDispose();
 
 }
@@ -14,7 +14,7 @@ public interface IRendererHoldable : INoteRenderer
     public void OnNoteLoaded(float chartPlaySpeed);
     public void UpdateComponentStates();
     public void UpdateComponentOpacity();
-    public void UpdateTransformScale();
+    public void UpdateTransformScale(double curTime);
 
     protected const float maximumNoteRange = 10f;
     protected static float NoteFallTime(float chartPlaySpeed)

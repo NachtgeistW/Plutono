@@ -87,7 +87,7 @@ namespace Plutono.Core.Note.Render
         }
 
 
-        public void Render()
+        public void Render(double curTime)
         {
             throw new System.NotImplementedException();
         }

@@ -107,7 +107,7 @@ public partial class JudgeController : Node3D
         {
             if (note.IsClear) return;
 
-            var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.endTime), Game.Mode);
+            var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.EndTime), Game.Mode);
             note.OnHoldEnd(endGrade);
             notesOnHolding.Remove(evt.Finger.Index);
 #if DEBUG
