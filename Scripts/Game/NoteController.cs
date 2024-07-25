@@ -3,7 +3,6 @@ using Plutono.Core.Note;
 using Plutono.Scripts.Game;
 using Plutono.Util;
 using System.Collections.Generic;
-using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 public partial class NoteController : Node3D
 {

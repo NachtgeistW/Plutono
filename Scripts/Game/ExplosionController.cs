@@ -1,5 +1,5 @@
 ﻿using Godot;
-using Plutono.Scripts.Notes;
+using Plutono.Core.Note;
 using Plutono.Util;
 
 namespace Plutono.Scripts.Game;

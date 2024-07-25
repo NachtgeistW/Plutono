@@ -1,5 +1,4 @@
 ﻿using Plutono.Core.Note;
-using Plutono.Scripts.Notes;
 using Plutono.Util;
 
 namespace Plutono.Scripts.Game
