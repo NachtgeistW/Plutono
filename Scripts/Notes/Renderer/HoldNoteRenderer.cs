@@ -46,7 +46,7 @@ namespace Plutono.Core.Note.Render
             //Debug.Log($"head pos:{head.Position.Z} body pos: {body.Position.Z} end pos:{end.Position.Z} length:{head.Position.Z - end.Position.Z}");
         }
 
-        #endregion
+		#endregion
 
 
         public void OnNoteLoaded(float chartPlaySpeed)
@@ -143,7 +143,7 @@ namespace Plutono.Core.Note.Render
                 default:
                     throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
             }
-        }
+		}
 
         private void OnExplosionAnimateFinish()
 		{
