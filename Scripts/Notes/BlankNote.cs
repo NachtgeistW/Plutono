@@ -8,22 +8,22 @@ namespace Plutono.Core.Note;
 
 public partial class BlankNote : Note, IMovable, ITapable
 {
-	public BlankNoteData data;
+	public BlankNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
 
 	public BlankNote()
 	{
-		data = new BlankNoteData(1, -1, 1.2, 10);
+		Data = new BlankNoteData(1, -1, 1.2, 10);
 	}
 
 	public BlankNote(BlankNoteData data)
 	{
-		this.data = data;
+		this.Data = data;
 	}
 
 	public BlankNote(BlankNoteData data, TapNoteRenderer noteRenderer)
 	{
-		this.data = data;
+		this.Data = data;
 		NoteRenderer = noteRenderer;
 	}
 
@@ -38,7 +38,7 @@ public partial class BlankNote : Note, IMovable, ITapable
 	{
 		var transform = Transform;
 
-		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (data.time - curTime));
+		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
 		transform.Origin.Z = -zPos;
 
 		Transform = transform;
@@ -46,12 +46,12 @@ public partial class BlankNote : Note, IMovable, ITapable
 
 	public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
 	{
-		var noteJudgingSize = data.size < 1.2 ? 0.6 : data.size / 2;
-		var noteDeltaXPos = Mathf.Abs(xPos - data.pos);
+		var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
+		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
 		if (noteDeltaXPos <= noteJudgingSize)
 		{
 			deltaXPos = noteDeltaXPos;
-			deltaTime = Math.Abs(touchTime - data.time);
+			deltaTime = Math.Abs(touchTime - Data.time);
 			return true;
 		}
 		else
