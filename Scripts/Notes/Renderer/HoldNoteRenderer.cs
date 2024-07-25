@@ -1,7 +1,6 @@
 using System;
 using Godot;
 using Plutono.Scripts.Utils;
-using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note.Render
 {
@@ -17,6 +16,7 @@ namespace Plutono.Core.Note.Render
 
 		private float width = 128;
 		private float height = 128;
+		protected float HoldingLength;
 
 		bool INoteRenderer.DisplayNoteId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -41,6 +41,8 @@ namespace Plutono.Core.Note.Render
 		public override void _Process(double delta)
 		{
 			base._Process(delta);
+			UpdateComponentStates();
+		}
 
             Render(delta);
             //Debug.Log($"head pos:{head.Position.Z} body pos: {body.Position.Z} end pos:{end.Position.Z} length:{head.Position.Z - end.Position.Z}");
@@ -49,79 +51,53 @@ namespace Plutono.Core.Note.Render
 		#endregion
 
 
-        public void OnNoteLoaded(float chartPlaySpeed)
+		public void OnNoteLoaded()
 		{
-			var length = note.HoldingLength;
+			var beginTime = -note.beginTime;
+			var endTime = -note.endTime;
+			var length = beginTime - endTime;
+			Debug.Log(length);
 
 			var headTransform = head.Transform;
 			var endTransform = end.Transform;
-			endTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, -(headTransform.Origin.Y + length));
+			headTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime);
+			endTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, endTime);
 
 			var bodyTransform = body.Transform;
-			bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y,  - length / 2);
+			bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime - length / 2);
 
+			head.Transform = headTransform;
 			body.Transform = bodyTransform;
 			end.Transform = endTransform;
 
 			body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
 
 			explosion.Visible = false;
-			explosion.Position = head.Position;
 		}
 
-		public void Render(double delta)
+		public void Move(double elapsedTime, float chartPlaySpeed)
 		{
-            if (!note.IsClear && note.IsHolding)
-            {
-				UpdateComponentStates(delta);
-				UpdateComponentOpacity();
-				UpdateTransformScale(delta);
-            }
-        }
+			var transform = node.Transform;
+			transform.Origin.Z += chartPlaySpeed * (float)elapsedTime;
+			node.Transform = transform;
+		}
 
-        public void UpdateComponentStates(double delta)
-        {
-            UpdateNotePosAndScale(delta);
-            UpdateExplosion();
-
-            void UpdateNotePosAndScale(double delta)
-            {
-                var moveDelta = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(note.chartPlaySpeed) * delta);
-
-                var endTransform = end.Transform;
-                endTransform.Origin.Z -= moveDelta;
-                endTransform.Origin = new Vector3(endTransform.Origin.X, endTransform.Origin.Y, endTransform.Origin.Z);
-                end.Transform = endTransform;
-
-                var headPosition = head.Position.Z;
-                var length = Math.Abs(endTransform.Origin.Z - headPosition);
-
-                var bodyTransform = body.Transform;
-                bodyTransform.Origin = new Vector3(bodyTransform.Origin.X, bodyTransform.Origin.Y, headPosition - length / 2);
-                body.Transform = bodyTransform;
-                body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
-            }
-
-            void UpdateExplosion()
-            {
-                if (!explosion.IsPlaying())
-                {
-                    explosion.Visible = true;
-                    //explosion.Modulate = new Color("ffd000");
-                    explosion.Play("good_start");
-                }
-            }
-        }
-
-        public void UpdateComponentOpacity()
+		public void Render()
 		{
-            //TODO: UpdateComponentOpacity;
-        }
+			UpdateComponentStates();
+			UpdateComponentOpacity();
+			UpdateTransformScale();
+		}
 
-		public void UpdateTransformScale(double delta)
+		public void UpdateComponentStates()
 		{
-            //TODO: UpdateTransformScale;
-        }
+			if (!note.IsClear && note.IsHolding && !explosion.IsPlaying())
+			{
+				explosion.Visible = true;
+                explosion.Modulate = new Color("ffd000");
+				explosion.Play("good_start");
+			}
+		}
 
         public void SetExplosionColour(NoteGrade grade)
         {
@@ -150,7 +126,18 @@ namespace Plutono.Core.Note.Render
 			explosion.Play("good_onhold");
 		}
 
-        public void OnClear(NoteGrade grade)
+
+		public void UpdateComponentOpacity()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void UpdateTransformScale()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void OnClear(NoteGrade grade)
 		{
             switch (grade)
             {
