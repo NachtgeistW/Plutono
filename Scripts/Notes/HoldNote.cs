@@ -3,20 +3,22 @@ using Godot;
 using Plutono.Scripts.Utils;
 using Plutono.Util;
 using Plutono.Scripts.Game;
+using Plutono.Core.Note.Render;
+using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note
 {
     public partial class HoldNote : Note, IMovable, IHoldable
     {
-        public HoldNoteData data;
+        public HoldNoteData Data;
 
-        private float chartPlaySpeed;
+        public float chartPlaySpeed;
 
-        public float beginTime { get; private set; } = 0f;
-        public float endTime { get; private set; } = 10f;
-        protected float HoldingLength;
+        public float BeginTime { get; private set; } = 1.5f;
+        public float EndTime { get; private set; } = 4.5f;
+        public float HoldingLength;
 
-        [Export] private Render.HoldNoteRenderer NoteRenderer { get; set; }
+        [Export] private HoldNoteRenderer NoteRenderer { get; set; }
         public double HoldingStartingTime { get; protected set; } = float.MaxValue;
         public double HeldDuration { get; protected set; }
         //public List<int> HoldingFingers { get; } = new List<int>(2);
@@ -28,13 +30,11 @@ namespace Plutono.Core.Note
 
         public HoldNote()
         {
-            data = new HoldNoteData(1, 3, 1.2, 10);
-            chartPlaySpeed = 10f;
+            chartPlaySpeed = 5f;
         }
 
         public HoldNote(float playSpeed)
         {
-            data = new HoldNoteData(1, 3, 1.2, 10);
             chartPlaySpeed = playSpeed;
         }
 
@@ -42,30 +42,40 @@ namespace Plutono.Core.Note
         {
             base._Ready();
 
-            HoldingLength = endTime - beginTime;
-            NoteRenderer.OnNoteLoaded();
+            var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
+            var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
+            
+            HoldingLength = endZPosInScene - beginZPosInScene;
+            NoteRenderer.OnNoteLoaded(chartPlaySpeed);
         }
 
         public override void _Process(double delta)
         {
             base._Process(delta);
-
             nowTime += delta;
         }
 
-        public void Move(double delta, float chartPlaySpeed)
+        public void Move(double curTime, float chartPlaySpeed)
         {
-            NoteRenderer.Move(delta, chartPlaySpeed);
+            if (!IsHolding)
+            {
+                var transform = Transform;
+
+                var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+                transform.Origin.Z = -zPos;
+
+                Transform = transform;
+            }
         }
 
         public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
         {
-            var noteJudgingSize = data.size < 1.2 ? 0.6 : data.size / 2;
-            var noteDeltaXPos = Mathf.Abs(xPos - data.pos);
+            var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
+            var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
             if (noteDeltaXPos <= noteJudgingSize)
             {
                 deltaXPos = noteDeltaXPos;
-                deltaTime = Math.Abs(touchTime - data.time);
+                deltaTime = Math.Abs(touchTime - Data.time);
                 return true;
             }
             else
@@ -76,7 +86,7 @@ namespace Plutono.Core.Note
             }
         }
 
-        public void OnHoldStart(Vector3 worldPos, double curTime)
+        public void OnHoldStart(Vector3 worldPos, double curTime, NoteGrade grade)
         {
             /*计算手势是否点到自己
              if 点到自己
@@ -91,10 +101,12 @@ namespace Plutono.Core.Note
             {
                 IsHolding = true;
                 HoldingStartingTime = curTime;
-                NoteRenderer.head.Hide();
-                Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} curTime: {curTime}");
+                Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} HoldingLength {HoldingLength}");
 
                 nowTime = curTime;
+
+                //NoteRenderer.head.Hide();
+                NoteRenderer.SetExplosionColour(grade);
             }
         }
 
@@ -102,8 +114,9 @@ namespace Plutono.Core.Note
         {
             if (IsHolding)
             {
-                HeldDuration = (curTime - HoldingStartingTime) * chartPlaySpeed;
+                HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
                 Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
+
                 //TODO:Verify 0.001
                 if (HoldingLength - HeldDuration < 0.0001)
                 {
@@ -155,7 +168,7 @@ namespace Plutono.Core.Note
             IsHolding = false;
             IsClear = true;
             OnClear(grade);
-            QueueFree();
+            //QueueFree();
         }
 
         public void OnHoldMiss()

@@ -36,12 +36,12 @@ namespace Plutono.Scripts.Notes
             NoteRenderer.OnNoteLoaded();
         }
 
-        public void Move(double delta, float chartPlaySpeed)
+        public void Move(double curTime, float chartPlaySpeed)
         {
             var transform = Transform;
 
-            var zPos = Transform.Origin.Z + chartPlaySpeed * (float)delta;
-            transform.Origin.Z = zPos;
+            var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (data.time - curTime));
+            transform.Origin.Z = -zPos;
 
             Transform = transform;
         }

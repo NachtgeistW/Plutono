@@ -6,6 +6,8 @@ using Plutono.Util;
 public partial class InputController : Node
 {
     [Export] private Game Game { get; set; }
+    [Export] private TimeController TimeControl { get; set; }
+
 
     public override void _Input(InputEvent @event)
     {
@@ -21,10 +23,10 @@ public partial class InputController : Node
                 {
                     Debug.Log("Released");
                     var pos = ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position);
-                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = Game.CurTime });
+                    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = TimeControl.CurTime });
                 }
                 Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position).X, " ", Game.CurTime);
+                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
             }
         }
 
@@ -32,11 +34,11 @@ public partial class InputController : Node
         {
             if (eventKey.IsPressed())
             {
-                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
             }
             else
             {
-                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = Game.CurTime });
+                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
             }
         }
     }
@@ -45,14 +47,11 @@ public partial class InputController : Node
     /// 
     /// </summary>
     /// <param name="camera"></param>
-    /// <param name="localPos"></param>
+    /// <param name="screenPos"></param>
     /// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
-    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 localPos)
+    private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 screenPos)
     {
-        var dropPlane = new Plane(new Vector3(0, 0, 5), 0);
-        return dropPlane.IntersectsRay(
-            camera.ProjectRayOrigin(localPos),
-            camera.ProjectRayNormal(localPos)) ?? Vector3.Inf;
+        return camera.ProjectPosition(screenPos, camera.GlobalTransform.Origin.Z);
     }
 }
 

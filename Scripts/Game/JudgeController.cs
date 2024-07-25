@@ -5,14 +5,15 @@ using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Utils;
 using Plutono.Util;
-using BlankNote = Plutono.Scripts.Notes.BlankNote;
 
 namespace Plutono.Scripts.Game;
 
 public partial class JudgeController : Node3D
 {
-    [Export] private NoteController NoteControl { get; set; }
     [Export] private Game Game { get; set; }
+
+    [Export] private NoteController NoteControl { get; set; }
+    [Export] private TimeController TimeControl { get; set; }
 
     //private readonly Dictionary<int, SlideNote> notesOnSliding = new(); //Finger index and sliding note on it
     private readonly Dictionary<int, HoldNote> notesOnHolding= new(); //Finger index and holding note on it
@@ -45,7 +46,7 @@ public partial class JudgeController : Node3D
         foreach (var note in notesOnHolding)
         {
             if (note.Value.IsHolding)
-                note.Value.UpdateHold(Vector3.Zero, Game.CurTime);
+                note.Value.UpdateHold(Vector3.Zero, TimeControl.CurTime);
         }
     }
 
@@ -79,7 +80,8 @@ public partial class JudgeController : Node3D
                     continue;
                 }
                 notesOnHolding.Add(evt.Finger.Index, curDetectingNote);
-                curDetectingNote.OnHoldStart(worldPos, curTime);
+                var startGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - curDetectingNote.BeginTime), Game.Mode);
+                curDetectingNote.OnHoldStart(worldPos, curTime, startGrade);
                 return;
             }
         }
@@ -106,13 +108,11 @@ public partial class JudgeController : Node3D
         {
             if (note.IsClear) return;
 
-            var endGrade = GetNoteGrade(Math.Abs(Game.CurTime - note.endTime), Game.Mode);
+            var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.EndTime), Game.Mode);
             note.OnHoldEnd(endGrade);
             notesOnHolding.Remove(evt.Finger.Index);
-#if DEBUG
             Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-                      $"Note: {note.data.id} Time: {note.data.time} CurTime: {curTime} Pos: {note.data.pos} JudgeSize: {(note.data.size < 1.2 ? 0.6 : note.data.size / 2)}");
-#endif
+                      $"Note: {note.Data.id} Time: {note.Data.time} CurTime: {curTime} Pos: {note.Data.pos} JudgeSize: {(note.Data.size < 1.2 ? 0.6 : note.Data.size / 2)}");
         }
     }
 
