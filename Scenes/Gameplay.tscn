@@ -311,6 +311,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 
+[node name="Slide" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
+NoteRenderer = NodePath("../BlankNote/Renderer")
+
+[node name="Slide2" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
+NoteRenderer = NodePath("../BlankNote/Renderer")
+
+[node name="Slide3" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -13)
+NoteRenderer = NodePath("../BlankNote/Renderer")
+
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
