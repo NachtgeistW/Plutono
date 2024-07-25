@@ -68,7 +68,7 @@ namespace Plutono.Core.Note
             }
         }
 
-        public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
+        public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
         {
             var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
             var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);

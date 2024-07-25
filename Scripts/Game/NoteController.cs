@@ -40,8 +40,8 @@ public partial class NoteController : Node3D
     {
         base._Ready();
 
-        blankNote.data = new BlankNoteData(1, 0, 1.2, 1.5);
-        blankNote2.data = new BlankNoteData(1, -10f, 1.2, 4.5);
+        blankNote.Data = new BlankNoteData(1, 0, 1.2, 1.5);
+        blankNote2.Data = new BlankNoteData(1, -10f, 1.2, 4.5);
         holdNote.Data =  new HoldNoteData(1, 3, 1.2, 1.5);
 
         BlankNotes.Add(blankNote);

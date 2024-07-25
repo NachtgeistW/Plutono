@@ -15,7 +15,7 @@ namespace Plutono.Core.Note
         /// note 是否被触摸（点击、按着或滑动）
         /// </summary>
         /// <returns>只要有一只手指按住就返回 true</returns>
-        public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime);
+        public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime);
 
         public void OnClear(NoteGrade grade);
 
@@ -43,7 +43,7 @@ namespace Plutono.Core.Note
         /// 
         /// </summary>
         /// <returns>Is </returns>
-        public bool OnTap(Vector2 worldPos, double hitTime, out double deltaTime, out float deltaXPos);
+        public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime);
     }
 
     /// <summary>

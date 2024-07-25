@@ -44,7 +44,7 @@ public partial class BlankNote : Note, IMovable, ITapable
 		Transform = transform;
 	}
 
-	public bool IsTouch(float xPos, out float deltaXPos, double touchTime, out double deltaTime)
+	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
 	{
 		var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
 		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
@@ -74,7 +74,7 @@ public partial class BlankNote : Note, IMovable, ITapable
 
 	}
 
-	public bool OnTap(Vector2 worldPos, double hitTime, out double deltaTime, out float deltaXPos)
+	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
 	{
 		throw new NotImplementedException();
 	}

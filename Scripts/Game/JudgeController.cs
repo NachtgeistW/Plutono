@@ -72,7 +72,7 @@ public partial class JudgeController : Node3D
         }
         {
             // Query hold note
-            foreach (var curDetectingNote in NoteControl.HoldNotes.Where(note => note.IsTouch(worldPos.X, out _, curTime, out _)))
+            foreach (var curDetectingNote in NoteControl.HoldNotes.Where(note => note.IsTouch(worldPos.X, curTime, out _, out _)))
             {
                 if (notesOnHolding.ContainsKey(evt.Finger.Index) || notesOnHolding.ContainsValue(curDetectingNote))
                 {
@@ -92,7 +92,7 @@ public partial class JudgeController : Node3D
             if (note is not null)
             {
                 Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-                          $"Note: {note.data.id} Time: {note.data.time} CurTime: {curTime} Pos: {note.data.pos} JudgeSize: {(note.data.size < 1.2 ? 0.6 : note.data.size / 2)}");
+                          $"Note: {note.Data.id} Time: {note.Data.time} CurTime: {curTime} Pos: {note.Data.pos} JudgeSize: {(note.Data.size < 1.2 ? 0.6 : note.Data.size / 2)}");
                 note.OnClear(grade);
                 return;
             }
@@ -142,7 +142,7 @@ public partial class JudgeController : Node3D
         var lastDeltaTime = double.MaxValue;
         foreach (var curDetectingNote in notes)
         {
-            if (!curDetectingNote.IsTouch(pos.X, out deltaXPos, touchTime, out var deltaTime))
+            if (!curDetectingNote.IsTouch(pos.X, touchTime, out deltaXPos, out var deltaTime))
                 continue;
             var curNoteGrade = GetNoteGrade(deltaTime, Game.Mode);
             if (curNoteGrade > grade)
