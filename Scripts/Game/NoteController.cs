@@ -85,9 +85,9 @@ public partial class NoteController : Node3D
         {
             note.Move(curTime, chartPlaySpeed);
         }
-    }
+	}
 
-    private void OnNoteClear(NoteClearEvent<BlankNote> evt) => BlankNotes.Remove(evt.Note);
+	private void OnNoteClear(NoteClearEvent<BlankNote> evt) => BlankNotes.Remove(evt.Note);
     private void OnNoteClear(NoteClearEvent<HoldNote> evt) => HoldNotes.Remove(evt.Note);
     private void OnNoteClear(NoteClearEvent<SlideNote> evt) => SlideNotes.Remove(evt.Note);
 }
