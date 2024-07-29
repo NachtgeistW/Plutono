@@ -8,7 +8,7 @@ namespace Plutono.Core.Note
 
     public interface IMovable : INote
     {
-        public void Move(double curTime, float chartPlaySpeed);
+		public void Move(double curTime, float chartPlaySpeed);
         public bool ShouldMiss();
 
         /// <summary>
@@ -52,15 +52,15 @@ namespace Plutono.Core.Note
     // ReSharper disable once IdentifierTypo
     public interface ISlidable : INote
     {
-        public void OnSlideStart(Vector2 worldPos, double curTime);
+        public void OnSlideStart(float xPos, double curTime);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="worldPos"></param>
+        /// <param name="xPos"></param>
         /// <returns>If the note can be cleared</returns>
-        public bool UpdateSlide(Vector2 worldPos);
-        public void OnSlideEnd(double curTime, out double deltaTime, out float deltaXPos);
+        public bool UpdateSlide(float xPos);
+        public void OnSlideEnd(NoteGrade grade);
     }
 
     public interface IHoldable : INote

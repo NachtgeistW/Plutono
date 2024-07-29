@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://0xp641m4eog6"]
+[gd_scene load_steps=44 format=3 uid="uid://0xp641m4eog6"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_2xpy6"]
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="1_78axj"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
 [ext_resource type="PackedScene" uid="uid://bwbadsckvqk1j" path="res://Prefabs/blank_note.tscn" id="8_dye54"]
 [ext_resource type="AudioStream" uid="uid://cb043v34t5kq7" path="res://Sheets/little_cry_remix_offvocal.mp3" id="10_lnjxm"]
+[ext_resource type="Script" path="res://Scripts/Notes/SlideNote.cs" id="11_0btr8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82cx"]
 atlas = ExtResource("6_iwybc")
@@ -252,13 +253,16 @@ script = ExtResource("2_jx4w1")
 Game = NodePath("../..")
 TimeControl = NodePath("../TimeController")
 
-[node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl", "blankNote", "blankNote2", "holdNote")]
+[node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl", "blankNote", "blankNote2", "holdNote", "slideNote", "slideNote2", "slideNote3")]
 script = ExtResource("3_gb8kx")
 Game = NodePath("../..")
 TimeControl = NodePath("../TimeController")
 blankNote = NodePath("../../Stage/Notes/BlankNote")
 blankNote2 = NodePath("../../Stage/Notes/BlankNote2")
 holdNote = NodePath("../../Stage/Notes/HoldNote")
+slideNote = NodePath("../../Stage/Notes/Slide")
+slideNote2 = NodePath("../../Stage/Notes/Slide2")
+slideNote3 = NodePath("../../Stage/Notes/Slide3")
 
 [node name="JudgeController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "NoteControl", "TimeControl")]
 script = ExtResource("4_edq2k")
@@ -311,17 +315,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 
-[node name="Slide" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+[node name="Slide" parent="Stage/Notes" instance=ExtResource("8_dye54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
-NoteRenderer = NodePath("../BlankNote/Renderer")
+script = ExtResource("11_0btr8")
 
-[node name="Slide2" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+[node name="Slide2" parent="Stage/Notes" instance=ExtResource("8_dye54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
-NoteRenderer = NodePath("../BlankNote/Renderer")
+script = ExtResource("11_0btr8")
 
-[node name="Slide3" parent="Stage/Notes" node_paths=PackedStringArray("NoteRenderer") instance=ExtResource("8_dye54")]
+[node name="Slide3" parent="Stage/Notes" instance=ExtResource("8_dye54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -13)
-NoteRenderer = NodePath("../BlankNote/Renderer")
+script = ExtResource("11_0btr8")
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3
