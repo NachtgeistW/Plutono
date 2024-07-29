@@ -107,16 +107,31 @@ public partial class JudgeController : Node3D
 		var worldPos = evt.WorldPos;
 		var curTime = evt.Time;
 
-		if (notesOnSliding.TryGetValue(evt.Finger.Index, out var note))
-		{
-			if (note.IsClear) return;
+		QuerySlideNote();
 
-			note.UpdateSlide(worldPos.X);
-			if (note.CanBeClear(worldPos.X))
+		void QuerySlideNote()
+		{
+			if (notesOnSliding.TryGetValue(evt.Finger.Index, out var note))
 			{
-				var grade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
-				note.OnSlideEnd(grade, curTime);
-				notesOnSliding.Remove(evt.Finger.Index);
+				if (note.IsClear) return;
+
+				note.UpdateSlide(worldPos.X);
+				if (note.CanBeClear(worldPos.X))
+				{
+					var grade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
+					note.OnSlideEnd(grade, curTime);
+					notesOnSliding.Remove(evt.Finger.Index);
+				}
+			}
+			else
+			{
+				foreach (var curDetectingNote in NoteControl.SlideNotes
+					         .Where(newNote => newNote.OnTap(worldPos.X, curTime, out _, out _)))
+				{
+					notesOnSliding.Add(evt.Finger.Index, curDetectingNote);
+					curDetectingNote.OnSlideStart(worldPos.X, curTime);
+					return;
+				}
 			}
 		}
 	}

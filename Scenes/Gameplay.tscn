@@ -308,15 +308,12 @@ texture = ExtResource("1_78axj")
 [node name="Notes" type="Node3D" parent="Stage"]
 
 [node name="BlankNote" parent="Stage/Notes" instance=ExtResource("8_dye54")]
-visible = false
 
 [node name="BlankNote2" parent="Stage/Notes" instance=ExtResource("8_dye54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
-visible = false
 
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
-visible = false
 
 [node name="Slide" parent="Stage/Notes" instance=ExtResource("11_601jq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -12)

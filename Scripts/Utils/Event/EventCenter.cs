@@ -4,6 +4,7 @@
 
 #endregion
 
+using Plutono.Scripts.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,7 @@ namespace Plutono.Util
             {
                 (item as Action<T>)?.Invoke(@event);
             }
+            Debug.Log($"Broadcast {typeof(T)}");
         }
     }
 }

@@ -17,11 +17,11 @@ public partial class InputController : Node
             {
                 if (eventMouseButton.IsPressed())
                 {
-                    Debug.Log("Pressed");
+                    Debug.Log("InputEventMouseButton Pressed");
                 }
                 else
                 {
-                    Debug.Log("Released");
+                    Debug.Log("InputEventMouseButton Released");
                     var pos = ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position);
                     EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = TimeControl.CurTime });
                 }
@@ -32,16 +32,9 @@ public partial class InputController : Node
 
         if (@event is InputEventMouseMotion inputEventMouseMotion && inputEventMouseMotion.ButtonMask == MouseButtonMask.Left)
         {
-	        if (inputEventMouseMotion.IsPressed())
-	        {
-		        var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
+		        Debug.Log("InputEventMouseMotion Pressed");
+				var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
 		        EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
-	        }
-			else
-	        {
-		        var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
-                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
-	        }
 		}
 
 		if (@event is InputEventKey eventKey && eventKey.Keycode == Key.Space)
