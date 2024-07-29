@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://Textures/39.png" id="6_qqv3p"]
 [ext_resource type="PackedScene" uid="uid://bwbadsckvqk1j" path="res://Prefabs/blank_note.tscn" id="8_dye54"]
 [ext_resource type="AudioStream" uid="uid://cb043v34t5kq7" path="res://Sheets/little_cry_remix_offvocal.mp3" id="10_lnjxm"]
-[ext_resource type="Script" path="res://Scripts/Notes/SlideNote.cs" id="11_0btr8"]
+[ext_resource type="PackedScene" uid="uid://cjpybw5fttgc7" path="res://Prefabs/slide_note.tscn" id="11_601jq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82cx"]
 atlas = ExtResource("6_iwybc")
@@ -308,24 +308,24 @@ texture = ExtResource("1_78axj")
 [node name="Notes" type="Node3D" parent="Stage"]
 
 [node name="BlankNote" parent="Stage/Notes" instance=ExtResource("8_dye54")]
+visible = false
 
 [node name="BlankNote2" parent="Stage/Notes" instance=ExtResource("8_dye54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
+visible = false
 
 [node name="HoldNote" parent="Stage/Notes" instance=ExtResource("6_og43b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+visible = false
 
-[node name="Slide" parent="Stage/Notes" instance=ExtResource("8_dye54")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
-script = ExtResource("11_0btr8")
+[node name="Slide" parent="Stage/Notes" instance=ExtResource("11_601jq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -12)
 
-[node name="Slide2" parent="Stage/Notes" instance=ExtResource("8_dye54")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
-script = ExtResource("11_0btr8")
+[node name="Slide2" parent="Stage/Notes" instance=ExtResource("11_601jq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12.5)
 
-[node name="Slide3" parent="Stage/Notes" instance=ExtResource("8_dye54")]
+[node name="Slide3" parent="Stage/Notes" instance=ExtResource("11_601jq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -13)
-script = ExtResource("11_0btr8")
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3

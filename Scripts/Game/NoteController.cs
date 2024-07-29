@@ -47,16 +47,16 @@ public partial class NoteController : Node3D
     {
         base._Ready();
 
-        blankNote.Data = new BlankNoteData(1, 0, 1.2, 3.5);
-        blankNote2.Data = new BlankNoteData(2, -10f, 1.2, 4.5);
-        holdNote.Data =  new HoldNoteData(3, 6, 1.2, 4.5);
+        //blankNote.Data = new BlankNoteData(1, 0, 1.2, 3.5);
+        //blankNote2.Data = new BlankNoteData(2, -10f, 1.2, 4.5);
+        //holdNote.Data =  new HoldNoteData(3, 6, 1.2, 4.5);
         slideNote.Data = new SlideNoteData(4, -2f, 1.2, 1.5);
         slideNote2.Data = new SlideNoteData(5, 0, 1.2, 2);
         slideNote3.Data = new SlideNoteData(6, 2f, 1.2, 2.5);
 
-        BlankNotes.Add(blankNote);
-        BlankNotes.Add(blankNote2);
-        HoldNotes.Add(holdNote);
+        //BlankNotes.Add(blankNote);
+        //BlankNotes.Add(blankNote2);
+        //HoldNotes.Add(holdNote);
         SlideNotes.Add(slideNote);
         SlideNotes.Add(slideNote2);
         SlideNotes.Add(slideNote3);
