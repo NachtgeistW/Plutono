@@ -2,6 +2,7 @@ using System;
 using Godot;
 using Plutono.Core.Note.Render;
 using Plutono.Scripts.Game;
+using Plutono.Scripts.Utils;
 using Plutono.Util;
 
 namespace Plutono.Core.Note;
@@ -10,6 +11,8 @@ public partial class BlankNote : Note, IMovable, ITapable
 {
 	public BlankNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
+
+	private double noteJudgingSize;
 
 	public BlankNote()
 	{
@@ -31,6 +34,8 @@ public partial class BlankNote : Note, IMovable, ITapable
 	{
 		base._Ready();
 
+		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+
 		NoteRenderer.OnNoteLoaded();
 	}
 
@@ -46,7 +51,6 @@ public partial class BlankNote : Note, IMovable, ITapable
 
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
 	{
-		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
 		if (noteDeltaXPos <= noteJudgingSize)
 		{
@@ -71,7 +75,13 @@ public partial class BlankNote : Note, IMovable, ITapable
 			Grade = grade,
 			//DeltaXPos = deltaXPos
 		});
+	}
 
+	public void OnClear(NoteGrade grade, double curTime)
+	{
+		OnClear(grade);
+		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
+		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 	}
 
 	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)

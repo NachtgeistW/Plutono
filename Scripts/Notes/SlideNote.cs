@@ -19,10 +19,13 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 	public float slideStartXPos;
 	private float moved;
 
+	private double noteJudgingSize;
 
 	public override void _Ready()
 	{
 		base._Ready();
+
+		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 
 		NoteRenderer.OnNoteLoaded();
 	}
@@ -44,7 +47,6 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
 	{
-		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
 		if (noteDeltaXPos <= noteJudgingSize)
 		{
@@ -97,6 +99,7 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 
 	public void OnSlideEnd(NoteGrade grade)
 	{
+		Debug.Log("OnSlideEnd");
 		IsSliding = false;
 		IsClear = true;
 		OnClear(grade);
@@ -106,7 +109,7 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 	{
 		OnSlideEnd(grade);
 		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {(Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2)}");
+		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 	}
 
 	public void OnClear(NoteGrade grade)

@@ -96,9 +96,7 @@ public partial class JudgeController : Node3D
 				out var deltaXPos, out var grade);
 			if (note is not null)
 			{
-				Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-						  $"Note: {note.Data.id} Time: {note.Data.time} CurTime: {curTime} Pos: {note.Data.pos} JudgeSize: {(note.Data.size < 1.2 ? 0.6 : note.Data.size / 2)}");
-				note.OnClear(grade);
+				note.OnClear(grade, curTime);
 				return;
 			}
 		}
@@ -117,7 +115,7 @@ public partial class JudgeController : Node3D
 			if (note.CanBeClear(worldPos.X))
 			{
 				var grade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
-				note.OnSlideEnd(grade);
+				note.OnSlideEnd(grade, curTime);
 				notesOnSliding.Remove(evt.Finger.Index);
 			}
 		}
@@ -134,10 +132,8 @@ public partial class JudgeController : Node3D
 				if (note.IsClear) return;
 
 				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.EndTime), Game.Mode);
-				note.OnHoldEnd(endGrade);
+				note.OnHoldEnd(endGrade, curTime);
 				notesOnHolding.Remove(evt.Finger.Index);
-				Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-						  $"Note: {note.Data.id} Time: {note.Data.time} CurTime: {curTime} Pos: {note.Data.pos} JudgeSize: {(note.Data.size < 1.2 ? 0.6 : note.Data.size / 2)}");
 			}
 		}
 		{

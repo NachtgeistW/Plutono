@@ -11,6 +11,7 @@ namespace Plutono.Core.Note
 	public partial class HoldNote : Note, IMovable, IHoldable
 	{
 		public HoldNoteData Data;
+		[Export] private HoldNoteRenderer NoteRenderer { get; set; }
 
 		public float chartPlaySpeed;
 
@@ -18,7 +19,7 @@ namespace Plutono.Core.Note
 		public float EndTime { get; private set; } = 4.5f;
 		public float HoldingLength;
 
-		[Export] private HoldNoteRenderer NoteRenderer { get; set; }
+		private double noteJudgingSize;
 		public double HoldingStartingTime { get; protected set; } = float.MaxValue;
 		public double HeldDuration { get; protected set; }
 		//public List<int> HoldingFingers { get; } = new List<int>(2);
@@ -26,7 +27,6 @@ namespace Plutono.Core.Note
 		public bool IsClear { get; private set; }
 
 		private double nowTime;
-		private float offset;
 
 		public HoldNote()
 		{
@@ -41,6 +41,8 @@ namespace Plutono.Core.Note
 		public override void _Ready()
 		{
 			base._Ready();
+
+			noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 
 			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
 			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
@@ -70,7 +72,6 @@ namespace Plutono.Core.Note
 
 		public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
 		{
-			var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 			var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
 			if (noteDeltaXPos <= noteJudgingSize)
 			{
@@ -115,7 +116,7 @@ namespace Plutono.Core.Note
 			if (IsHolding)
 			{
 				HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
-				Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
+				//Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
 
 				//TODO:Verify 0.001
 				if (HoldingLength - HeldDuration < 0.0001)
@@ -169,6 +170,13 @@ namespace Plutono.Core.Note
 			IsClear = true;
 			OnClear(grade);
 			//QueueFree();
+		}
+
+		public void OnHoldEnd(NoteGrade grade, double curTime)
+		{
+			OnHoldEnd(grade);
+			Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
+			          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 		}
 
 		public void OnHoldMiss()
