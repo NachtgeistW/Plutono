@@ -53,13 +53,7 @@ namespace Plutono.Core.Note
     public interface ISlidable : INote
     {
         public void OnSlideStart(float xPos, double curTime);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="xPos"></param>
-        /// <returns>If the note can be cleared</returns>
-        public bool UpdateSlide(float xPos);
+        public void UpdateSlide(float xPos);
         public void OnSlideEnd(NoteGrade grade);
     }
 

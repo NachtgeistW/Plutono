@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Utils;
 using Plutono.Util;
+using Debug = Plutono.Scripts.Utils.Debug;
 
 namespace Plutono.Scripts.Game;
 
@@ -26,6 +28,7 @@ public partial class JudgeController : Node3D
 		base._EnterTree();
 
 		EventCenter.AddListener<FingerDownEvent>(OnFingerDown);
+		EventCenter.AddListener<FingerMoveEvent>(OnFingerMove);
 		EventCenter.AddListener<FingerUpEvent>(OnFingerUp);
 	}
 
@@ -34,6 +37,7 @@ public partial class JudgeController : Node3D
 		base._ExitTree();
 
 		EventCenter.RemoveListener<FingerDownEvent>(OnFingerDown);
+		EventCenter.RemoveListener<FingerMoveEvent>(OnFingerMove);
 		EventCenter.RemoveListener<FingerUpEvent>(OnFingerUp);
 	}
 
@@ -100,6 +104,25 @@ public partial class JudgeController : Node3D
 		}
 	}
 
+	private void OnFingerMove(FingerMoveEvent evt)
+	{
+		var worldPos = evt.WorldPos;
+		var curTime = evt.Time;
+
+		if (notesOnSliding.TryGetValue(evt.Finger.Index, out var note))
+		{
+			if (note.IsClear) return;
+
+			note.UpdateSlide(worldPos.X);
+			if (note.CanBeClear(worldPos.X))
+			{
+				var grade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
+				note.OnSlideEnd(grade);
+				notesOnSliding.Remove(evt.Finger.Index);
+			}
+		}
+	}
+
 	private void OnFingerUp(FingerUpEvent evt)
 	{
 		var curTime = evt.Time;
@@ -123,10 +146,8 @@ public partial class JudgeController : Node3D
 				if (note.IsClear) return;
 
 				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
-				note.OnSlideEnd(endGrade);
+				note.OnSlideEnd(endGrade, curTime);
 				notesOnSliding.Remove(evt.Finger.Index);
-				Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-						  $"Note: {note.Data.id} Time: {note.Data.time} CurTime: {curTime} Pos: {note.Data.pos} JudgeSize: {(note.Data.size < 1.2 ? 0.6 : note.Data.size / 2)}");
 			}
 		}
 	}

@@ -30,7 +30,21 @@ public partial class InputController : Node
             }
         }
 
-        if (@event is InputEventKey eventKey && eventKey.Keycode == Key.Space)
+        if (@event is InputEventMouseMotion inputEventMouseMotion && inputEventMouseMotion.ButtonMask == MouseButtonMask.Left)
+        {
+	        if (inputEventMouseMotion.IsPressed())
+	        {
+		        var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
+		        EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
+	        }
+			else
+	        {
+		        var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
+                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
+	        }
+		}
+
+		if (@event is InputEventKey eventKey && eventKey.Keycode == Key.Space)
         {
             if (eventKey.IsPressed())
             {

@@ -4,6 +4,7 @@ using Plutono.Scripts.Game;
 using Plutono.Util;
 using System;
 using System.Drawing;
+using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note;
 
@@ -79,21 +80,33 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 		slideStartXPos = xPos;
 	}
 
-	public bool UpdateSlide(float xPos)
+	public void UpdateSlide(float xPos)
 	{
-		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+		moved = xPos - slideStartXPos;
+	}
+
+	public bool CanBeClear(float xPos)
+	{
 		//TODO: 这个Data.time作为判断条件好像是有问题的
 		if (!IsTouch(xPos, Data.time, out _, out _))
 			return true;
-		moved = xPos - slideStartXPos;
+		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+
 		return Mathf.Abs(moved) >= noteJudgingSize / 2;
-	}
+	} 
 
 	public void OnSlideEnd(NoteGrade grade)
 	{
 		IsSliding = false;
 		IsClear = true;
 		OnClear(grade);
+	}
+
+	public void OnSlideEnd(NoteGrade grade, double curTime)
+	{
+		OnSlideEnd(grade);
+		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
+		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {(Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2)}");
 	}
 
 	public void OnClear(NoteGrade grade)
@@ -105,4 +118,5 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 			Grade = grade,
 		});
 	}
+
 }
