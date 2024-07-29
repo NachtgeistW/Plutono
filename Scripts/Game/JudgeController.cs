@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Utils;
 using Plutono.Util;
-using Debug = Plutono.Scripts.Utils.Debug;
 
 namespace Plutono.Scripts.Game;
 
@@ -116,7 +114,7 @@ public partial class JudgeController : Node3D
 				if (note.IsClear) return;
 
 				note.UpdateSlide(worldPos.X);
-				if (note.CanBeClear(worldPos.X))
+				if (note.CanBeClear(worldPos.X, Game.Mode))
 				{
 					var grade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.SlideStartTime), Game.Mode);
 					note.OnSlideEnd(grade, curTime);

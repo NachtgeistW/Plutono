@@ -16,11 +16,11 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 	public bool IsClear { get; private set; }
 	public bool IsSliding { get; private set; }
 	public double SlideStartTime { get; private set; }
-	public float slideStartXPos;
+	public float slideStartXPos { get; private set; }
 	private float moved;
 
 	private double noteJudgingSize;
-
+	
 	public override void _Ready()
 	{
 		base._Ready();
@@ -87,14 +87,30 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 		moved = xPos - slideStartXPos;
 	}
 
-	public bool CanBeClear(float xPos)
+	public bool CanBeClear(float xPos, GameMode gameMode)
 	{
-		//TODO: 这个Data.time作为判断条件好像是有问题的
-		if (!IsTouch(xPos, Data.time, out _, out _))
-			return true;
-		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+		switch (gameMode)
+		{
+			case GameMode.Arbo:
+			case GameMode.Floro:
+				return IsReachRequirementDeemo();
+			case GameMode.Stelo:
+			case GameMode.Autoplay:
+			default:
+				return IsReachRequirementPlutono();
+		}
 
-		return Mathf.Abs(moved) >= noteJudgingSize / 2;
+		bool IsReachRequirementDeemo()
+		{
+			return IsTouch(xPos, Data.time, out _, out _);
+		}
+
+		bool IsReachRequirementPlutono()
+		{
+			if (!IsTouch(xPos, Data.time, out _, out _))
+				return true;
+			return Mathf.Abs(moved) >= noteJudgingSize / 2;
+		}
 	} 
 
 	public void OnSlideEnd(NoteGrade grade)

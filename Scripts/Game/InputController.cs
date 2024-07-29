@@ -32,9 +32,9 @@ public partial class InputController : Node
 
         if (@event is InputEventMouseMotion inputEventMouseMotion && inputEventMouseMotion.ButtonMask == MouseButtonMask.Left)
         {
-		        Debug.Log("InputEventMouseMotion Pressed");
-				var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
-		        EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
+	        Debug.Log("InputEventMouseMotion Pressed");
+			var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
+	        EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
 		}
 
 		if (@event is InputEventKey eventKey && eventKey.Keycode == Key.Space)
