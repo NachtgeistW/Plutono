@@ -46,7 +46,7 @@ public partial class BlankNote : Note, IMovable, ITapable
 
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
 	{
-		var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
+		var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
 		if (noteDeltaXPos <= noteJudgingSize)
 		{

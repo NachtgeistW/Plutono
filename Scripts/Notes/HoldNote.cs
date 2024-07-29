@@ -8,87 +8,87 @@ using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note
 {
-    public partial class HoldNote : Note, IMovable, IHoldable
-    {
-        public HoldNoteData Data;
+	public partial class HoldNote : Note, IMovable, IHoldable
+	{
+		public HoldNoteData Data;
 
-        public float chartPlaySpeed;
+		public float chartPlaySpeed;
 
-        public float BeginTime { get; private set; } = 1.5f;
-        public float EndTime { get; private set; } = 4.5f;
-        public float HoldingLength;
+		public float BeginTime { get; private set; } = 1.5f;
+		public float EndTime { get; private set; } = 4.5f;
+		public float HoldingLength;
 
-        [Export] private HoldNoteRenderer NoteRenderer { get; set; }
-        public double HoldingStartingTime { get; protected set; } = float.MaxValue;
-        public double HeldDuration { get; protected set; }
-        //public List<int> HoldingFingers { get; } = new List<int>(2);
-        public bool IsHolding { get; protected set; }
-        public bool IsClear { get; protected set; }
+		[Export] private HoldNoteRenderer NoteRenderer { get; set; }
+		public double HoldingStartingTime { get; protected set; } = float.MaxValue;
+		public double HeldDuration { get; protected set; }
+		//public List<int> HoldingFingers { get; } = new List<int>(2);
+		public bool IsHolding { get; protected set; }
+		public bool IsClear { get; private set; }
 
-        private double nowTime;
-        private float offset;
+		private double nowTime;
+		private float offset;
 
-        public HoldNote()
-        {
-            chartPlaySpeed = 5f;
-        }
+		public HoldNote()
+		{
+			chartPlaySpeed = 5f;
+		}
 
-        public HoldNote(float playSpeed)
-        {
-            chartPlaySpeed = playSpeed;
-        }
+		public HoldNote(float playSpeed)
+		{
+			chartPlaySpeed = playSpeed;
+		}
 
-        public override void _Ready()
-        {
-            base._Ready();
+		public override void _Ready()
+		{
+			base._Ready();
 
-            var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
-            var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
-            
-            HoldingLength = endZPosInScene - beginZPosInScene;
-            NoteRenderer.OnNoteLoaded(chartPlaySpeed);
-        }
+			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
+			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
 
-        public override void _Process(double delta)
-        {
-            base._Process(delta);
-            nowTime += delta;
-        }
+			HoldingLength = endZPosInScene - beginZPosInScene;
+			NoteRenderer.OnNoteLoaded(chartPlaySpeed);
+		}
 
-        public void Move(double curTime, float chartPlaySpeed)
-        {
-            if (!IsHolding)
-            {
-                var transform = Transform;
+		public override void _Process(double delta)
+		{
+			base._Process(delta);
+			nowTime += delta;
+		}
 
-                var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
-                transform.Origin.Z = -zPos;
+		public void Move(double curTime, float chartPlaySpeed)
+		{
+			if (!IsHolding)
+			{
+				var transform = Transform;
 
-                Transform = transform;
-            }
-        }
+				var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+				transform.Origin.Z = -zPos;
 
-        public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
-        {
-            var noteJudgingSize = Data.size < 1.2 ? 0.6 : Data.size / 2;
-            var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
-            if (noteDeltaXPos <= noteJudgingSize)
-            {
-                deltaXPos = noteDeltaXPos;
-                deltaTime = Math.Abs(touchTime - Data.time);
-                return true;
-            }
-            else
-            {
-                deltaXPos = float.MaxValue;
-                deltaTime = double.MaxValue;
-                return false;
-            }
-        }
+				Transform = transform;
+			}
+		}
 
-        public void OnHoldStart(Vector3 worldPos, double curTime, NoteGrade grade)
-        {
-            /*计算手势是否点到自己
+		public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
+		{
+			var noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+			var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
+			if (noteDeltaXPos <= noteJudgingSize)
+			{
+				deltaXPos = noteDeltaXPos;
+				deltaTime = Math.Abs(touchTime - Data.time);
+				return true;
+			}
+			else
+			{
+				deltaXPos = float.MaxValue;
+				deltaTime = double.MaxValue;
+				return false;
+			}
+		}
+
+		public void OnHoldStart(Vector3 worldPos, double curTime, NoteGrade grade)
+		{
+			/*计算手势是否点到自己
              if 点到自己
             {
                 判定离开判定区间 = false
@@ -97,39 +97,39 @@ namespace Plutono.Core.Note
                 移出头判判定序列
               移入按住判定的判定序列
             }*/
-            if (!IsHolding)
-            {
-                IsHolding = true;
-                HoldingStartingTime = curTime;
-                Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} HoldingLength {HoldingLength}");
+			if (!IsHolding)
+			{
+				IsHolding = true;
+				HoldingStartingTime = curTime;
+				Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} HoldingLength {HoldingLength}");
 
-                nowTime = curTime;
+				nowTime = curTime;
 
-                //NoteRenderer.head.Hide();
-                NoteRenderer.SetExplosionColour(grade);
-            }
-        }
+				//NoteRenderer.head.Hide();
+				NoteRenderer.SetExplosionColour(grade);
+			}
+		}
 
-        public void UpdateHold(Vector3 worldPos, double curTime)
-        {
-            if (IsHolding)
-            {
-                HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
-                Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
+		public void UpdateHold(Vector3 worldPos, double curTime)
+		{
+			if (IsHolding)
+			{
+				HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
+				Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
 
-                //TODO:Verify 0.001
-                if (HoldingLength - HeldDuration < 0.0001)
-                {
-                    OnHoldEnd(NoteGrade.Perfect);
-                }
-            }
-            else
-            {
-                Debug.Log("!IsHolding");
-                OnHoldMiss();
-            }
+				//TODO:Verify 0.001
+				if (HoldingLength - HeldDuration < 0.0001)
+				{
+					OnHoldEnd(NoteGrade.Perfect);
+				}
+			}
+			else
+			{
+				Debug.Log("!IsHolding");
+				OnHoldMiss();
+			}
 
-            /*
+			/*
             if isHolding
             {
                 计时
@@ -155,41 +155,41 @@ namespace Plutono.Core.Note
                 }
             }
             */
-        }
+		}
 
-        public void OnHoldEnd(NoteGrade grade)
-        {
-            /*
+		public void OnHoldEnd(NoteGrade grade)
+		{
+			/*
                 统计分数和生成特效
                 将自己移出判定序列
                 删除自己
             */
-            Debug.Log($"OnHoldEnd");
-            IsHolding = false;
-            IsClear = true;
-            OnClear(grade);
-            //QueueFree();
-        }
+			Debug.Log($"OnHoldEnd");
+			IsHolding = false;
+			IsClear = true;
+			OnClear(grade);
+			//QueueFree();
+		}
 
-        public void OnHoldMiss()
-        {
-            Debug.Log("OnHoldMiss");
-        }
+		public void OnHoldMiss()
+		{
+			Debug.Log("OnHoldMiss");
+		}
 
-        public void OnClear(NoteGrade grade)
-        {
-            NoteRenderer.OnClear(grade);
-            EventCenter.Broadcast(new NoteClearEvent<HoldNote>
-            {
-                Note = this,
-                Grade = grade,
-                //DeltaXPos = deltaXPos
-            });
-        }
+		public void OnClear(NoteGrade grade)
+		{
+			NoteRenderer.OnClear(grade);
+			EventCenter.Broadcast(new NoteClearEvent<HoldNote>
+			{
+				Note = this,
+				Grade = grade,
+				//DeltaXPos = deltaXPos
+			});
+		}
 
-        public bool ShouldMiss()
-        {
-            return !IsHolding;
-        }
-    }
+		public bool ShouldMiss()
+		{
+			return !IsHolding;
+		}
+	}
 }
