@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Plutono.Scripts.Utils;
+using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note.Render
 {
@@ -16,7 +17,6 @@ namespace Plutono.Core.Note.Render
 
 		private float width = 128;
 		private float height = 128;
-		protected float HoldingLength;
 
 		bool INoteRenderer.DisplayNoteId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -41,126 +41,139 @@ namespace Plutono.Core.Note.Render
 		public override void _Process(double delta)
 		{
 			base._Process(delta);
-			UpdateComponentStates();
-		}
 
-            Render(delta);
-            //Debug.Log($"head pos:{head.Position.Z} body pos: {body.Position.Z} end pos:{end.Position.Z} length:{head.Position.Z - end.Position.Z}");
-        }
+			Render(delta);
+			//Debug.Log($"head pos:{head.Position.Z} body pos: {body.Position.Z} end pos:{end.Position.Z} length:{head.Position.Z - end.Position.Z}");
+		}
 
 		#endregion
 
 
-		public void OnNoteLoaded()
+		public void OnNoteLoaded(float chartPlaySpeed)
 		{
-			var beginTime = -note.beginTime;
-			var endTime = -note.endTime;
-			var length = beginTime - endTime;
-			Debug.Log(length);
+			var length = note.HoldingLength;
 
 			var headTransform = head.Transform;
 			var endTransform = end.Transform;
-			headTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime);
-			endTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, endTime);
+			endTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, -(headTransform.Origin.Y + length));
 
 			var bodyTransform = body.Transform;
-			bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, beginTime - length / 2);
+			bodyTransform.Origin = new Vector3(headTransform.Origin.X, headTransform.Origin.Y, -length / 2);
 
-			head.Transform = headTransform;
 			body.Transform = bodyTransform;
 			end.Transform = endTransform;
 
 			body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
 
 			explosion.Visible = false;
+			explosion.Position = head.Position;
 		}
 
-		public void Move(double elapsedTime, float chartPlaySpeed)
+		public void Render(double delta)
 		{
-			var transform = node.Transform;
-			transform.Origin.Z += chartPlaySpeed * (float)elapsedTime;
-			node.Transform = transform;
-		}
-
-		public void Render()
-		{
-			UpdateComponentStates();
-			UpdateComponentOpacity();
-			UpdateTransformScale();
-		}
-
-		public void UpdateComponentStates()
-		{
-			if (!note.IsClear && note.IsHolding && !explosion.IsPlaying())
+			if (!note.IsClear && note.IsHolding)
 			{
-				explosion.Visible = true;
-                explosion.Modulate = new Color("ffd000");
-				explosion.Play("good_start");
+				UpdateComponentStates(delta);
+				UpdateComponentOpacity();
+				UpdateTransformScale(delta);
 			}
 		}
 
-        public void SetExplosionColour(NoteGrade grade)
-        {
-            switch (grade)
-            {
-                case NoteGrade.Perfect:
-                    explosion.Modulate = new Color("ffd000");
-                    break;
-                case NoteGrade.Good:
-                    explosion.Modulate = new Color("00b300");
-                    break;
-                case NoteGrade.Bad:
-                    explosion.Modulate = new Color("0079ff");
-                    break;
-                case NoteGrade.Miss:
-                    explosion.Modulate = new Color("494949");
-                    break;
-                case NoteGrade.None:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
-            }
+		public void UpdateComponentStates(double delta)
+		{
+			UpdateNotePosAndScale(delta);
+			UpdateExplosion();
+
+			void UpdateNotePosAndScale(double delta)
+			{
+				var moveDelta = -(float)(IRendererHoldable.maximumNoteRange / IRendererHoldable.NoteFallTime(note.chartPlaySpeed) * delta);
+
+				var endTransform = end.Transform;
+				endTransform.Origin.Z -= moveDelta;
+				endTransform.Origin = new Vector3(endTransform.Origin.X, endTransform.Origin.Y, endTransform.Origin.Z);
+				end.Transform = endTransform;
+
+				var headPosition = head.Position.Z;
+				var length = Math.Abs(endTransform.Origin.Z - headPosition);
+
+				var bodyTransform = body.Transform;
+				bodyTransform.Origin = new Vector3(bodyTransform.Origin.X, bodyTransform.Origin.Y, headPosition - length / 2);
+				body.Transform = bodyTransform;
+				body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
+			}
+
+			void UpdateExplosion()
+			{
+				if (!explosion.IsPlaying())
+				{
+					explosion.Visible = true;
+					//explosion.Modulate = new Color("ffd000");
+					explosion.Play("good_start");
+				}
+			}
 		}
 
-        private void OnExplosionAnimateFinish()
+		public void UpdateComponentOpacity()
+		{
+			//TODO: UpdateComponentOpacity;
+		}
+
+		public void UpdateTransformScale(double delta)
+		{
+			//TODO: UpdateTransformScale;
+		}
+
+		public void SetExplosionColour(NoteGrade grade)
+		{
+			switch (grade)
+			{
+				case NoteGrade.Perfect:
+					explosion.Modulate = new Color("ffd000");
+					break;
+				case NoteGrade.Good:
+					explosion.Modulate = new Color("00b300");
+					break;
+				case NoteGrade.Bad:
+					explosion.Modulate = new Color("0079ff");
+					break;
+				case NoteGrade.Miss:
+					explosion.Modulate = new Color("494949");
+					break;
+				case NoteGrade.None:
+				default:
+					throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
+			}
+		}
+
+		private void OnExplosionAnimateFinish()
 		{
 			explosion.Play("good_onhold");
 		}
 
-
-		public void UpdateComponentOpacity()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void UpdateTransformScale()
-		{
-			throw new NotImplementedException();
-		}
-
 		public void OnClear(NoteGrade grade)
 		{
-            switch (grade)
-            {
+			switch (grade)
+			{
 				case NoteGrade.Perfect:
-                    explosion.Modulate = new Color("ffd000");
-                    explosion.Play("perfect_end");
-                    break;
-                case NoteGrade.Good:
-                    explosion.Modulate = new Color("00b300");
-                    explosion.Play("good_end");
-                    break;
-                case NoteGrade.Bad:
-                    explosion.Modulate = new Color("0079ff");
-                    explosion.Play("good_end");
-                    break;
-                case NoteGrade.Miss:
-                    explosion.Modulate = new Color("494949");
-                    explosion.Play("good_end");
+					explosion.Modulate = new Color("ffd000");
+					explosion.Play("perfect_end");
 					break;
-                case NoteGrade.None:
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
-            }
+				case NoteGrade.Good:
+					explosion.Modulate = new Color("00b300");
+					explosion.Play("good_end");
+					break;
+				case NoteGrade.Bad:
+					explosion.Modulate = new Color("0079ff");
+					explosion.Play("good_end");
+					break;
+				case NoteGrade.Miss:
+					explosion.Modulate = new Color("494949");
+					explosion.Play("good_end");
+					break;
+				case NoteGrade.None:
+				default:
+					throw new ArgumentOutOfRangeException(nameof(grade), grade, null);
+			}
 		}
 
 		public void OnDispose()
