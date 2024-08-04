@@ -11,13 +11,17 @@ config_version=5
 [application]
 
 config/name="Plutono"
-run/main_scene="res://Scenes/Gameplay.tscn"
+run/main_scene="res://src/Scenes/Gameplay.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [dotnet]
 
 project/assembly_name="plutono"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
 [rendering]
 
