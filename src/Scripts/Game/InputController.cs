@@ -12,26 +12,23 @@ public partial class InputController : Node
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventMouseButton eventMouseButton)
+        if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left } eventMouseButton)
         {
-            if (eventMouseButton.ButtonIndex == MouseButton.Left)
-            {
-                if (eventMouseButton.IsPressed())
-                {
-	                Debug.Log("InputEventMouseButton Pressed");
-	                OnFingerDown(eventMouseButton.Position);
-                }
-                else
-                {
-                    Debug.Log("InputEventMouseButton Released");
-					OnFingerUp(eventMouseButton.Position);
-                }
-				Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-                Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
-            }
+	        if (eventMouseButton.IsPressed())
+	        {
+		        Debug.Log("InputEventMouseButton Pressed");
+		        OnFingerDown(eventMouseButton.Position);
+	        }
+	        else
+	        {
+		        Debug.Log("InputEventMouseButton Released");
+		        OnFingerUp(eventMouseButton.Position);
+	        }
+	        Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
+	        Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
         }
 
-        if (@event is InputEventMouseMotion inputEventMouseMotion && inputEventMouseMotion.ButtonMask == MouseButtonMask.Left)
+        if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
         {
 	        if (lastPosition == Vector2.Inf)
 	        {
