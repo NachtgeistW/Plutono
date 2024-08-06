@@ -7,7 +7,10 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Scripts\Utils\Event\" />
+    <Compile Remove="Scripts\**" />
+    <EmbeddedResource Remove="Scripts\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="gdUnit4.api" Version="4.2.*" />
   </ItemGroup>
 </Project>

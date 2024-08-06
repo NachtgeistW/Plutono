@@ -36,18 +36,6 @@ public partial class InputController : Node
 			var pos = ScreenToWorldPoint(Game.OrthographicCamera, inputEventMouseMotion.Position);
 	        EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
 		}
-
-		if (@event is InputEventKey eventKey && eventKey.Keycode == Key.Space)
-        {
-            if (eventKey.IsPressed())
-            {
-                EventCenter.Broadcast(new FingerDownEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
-            }
-            else
-            {
-                EventCenter.Broadcast(new FingerUpEvent { Finger = new Finger(), WorldPos = new Vector3(3, 0, 0), Time = TimeControl.CurTime });
-            }
-        }
     }
 
     /// <summary>

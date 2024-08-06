@@ -1,7 +1,5 @@
 using System;
 using Godot;
-using Plutono.Scripts.Utils;
-using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note.Render
 {
@@ -43,7 +41,6 @@ namespace Plutono.Core.Note.Render
 			base._Process(delta);
 
 			Render(delta);
-			//Debug.Log($"head pos:{head.Position.Z} body pos: {body.Position.Z} end pos:{end.Position.Z} length:{head.Position.Z - end.Position.Z}");
 		}
 
 		#endregion
