@@ -109,7 +109,7 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 		{
 			if (!IsTouch(xPos, Data.time, out _, out _))
 				return true;
-			return Mathf.Abs(moved) >= noteJudgingSize / 2;
+			return Mathf.Abs(moved) >= noteJudgingSize;
 		}
 	} 
 
