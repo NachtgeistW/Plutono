@@ -83,7 +83,7 @@ public partial class JudgeController : Node3D
 					continue;
 				}
 				notesOnHolding.Add(evt.Finger.Index, curDetectingNote);
-				var startGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - curDetectingNote.BeginTime), Game.Mode);
+				var startGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - curDetectingNote.Data.BeginTime), Game.Mode);
 				curDetectingNote.OnHoldStart(worldPos, curTime, startGrade);
 				return;
 			}
@@ -144,7 +144,7 @@ public partial class JudgeController : Node3D
 			{
 				if (note.IsClear) return;
 
-				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.EndTime), Game.Mode);
+				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.Data.EndTime), Game.Mode);
 				note.OnHoldEnd(endGrade, curTime);
 				notesOnHolding.Remove(evt.Finger.Index);
 			}

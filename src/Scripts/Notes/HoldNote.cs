@@ -15,8 +15,6 @@ namespace Plutono.Core.Note
 
 		public float chartPlaySpeed;
 
-		public float BeginTime { get; private set; } = 1.5f;
-		public float EndTime { get; private set; } = 4.5f;
 		public float HoldingLength;
 
 		private double noteJudgingSize;
@@ -44,8 +42,8 @@ namespace Plutono.Core.Note
 
 			noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 
-			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
-			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
+			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.BeginTime;
+			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.EndTime;
 
 			HoldingLength = endZPosInScene - beginZPosInScene;
 			NoteRenderer.OnNoteLoaded(chartPlaySpeed);
@@ -63,7 +61,7 @@ namespace Plutono.Core.Note
 			{
 				var transform = Transform;
 
-				var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+				var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.BeginTime - curTime));
 				transform.Origin.Z = -zPos;
 
 				Transform = transform;
@@ -76,7 +74,7 @@ namespace Plutono.Core.Note
 			if (noteDeltaXPos <= noteJudgingSize)
 			{
 				deltaXPos = noteDeltaXPos;
-				deltaTime = Math.Abs(touchTime - Data.time);
+				deltaTime = Math.Abs(touchTime - Data.BeginTime);
 				return true;
 			}
 			else
@@ -176,7 +174,7 @@ namespace Plutono.Core.Note
 		{
 			OnHoldEnd(grade);
 			Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-			          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
+			          $"Note: {Data.id} Time: {Data.BeginTime} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 		}
 
 		public void OnHoldMiss()
