@@ -7,7 +7,7 @@ using Plutono.Util;
 
 namespace Plutono.Core.Note;
 
-public partial class BlankNote : Note, IMovable, ITapable
+public partial class BlankNote : Note, IMovable, ITappable
 {
 	public BlankNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }

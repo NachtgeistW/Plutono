@@ -4,7 +4,7 @@ using System;
 
 namespace Plutono.Core.Note
 {
-	public partial class PianoNote : Note, IMovable, ITapable, IPianoSoundPlayable
+	public partial class PianoNote : Note, IMovable, ITappable, IPianoSoundPlayable
 	{
 		public PianoNoteData Data;
 		[Export] public TapNoteRenderer NoteRenderer { get; set; }

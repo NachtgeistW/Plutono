@@ -2,7 +2,7 @@
 
 using GdUnit4;
 using static GdUnit4.Assertions;
-using Plutono.Core.Note;
+using Core.Note;
 
 [TestSuite]
 public class GdUnitExampleTest
@@ -10,10 +10,7 @@ public class GdUnitExampleTest
 	[TestCase]
     public void TestSlideNoteCanBeClearDeemo()
     {
-		SlideNote slideNote = new()
-		{
-			Data = new SlideNoteData(4, -2f, 1.2, 1.5)
-		};
+	    SlideNote slideNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
 		AutoFree(slideNote);
 
 		AssertBool(slideNote.CanBeClear(0f, Scripts.Utils.GameMode.Arbo) == false);
@@ -23,10 +20,7 @@ public class GdUnitExampleTest
 	[TestCase]
 	public void TestSlideNoteCanBeClearPlutono()
 	{
-		SlideNote slideNote = new()
-		{
-			Data = new SlideNoteData(4, -2f, 1.2, 1.5)
-		};
+		SlideNote slideNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
 		AutoFree(slideNote);
 
 		AssertBool(slideNote.CanBeClear(0f, Scripts.Utils.GameMode.Stelo) == false);

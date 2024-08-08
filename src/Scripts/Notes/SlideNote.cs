@@ -8,7 +8,7 @@ using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note;
 
-public partial class SlideNote : Note, IMovable, ITapable, ISlidable
+public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 {
 	public SlideNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
@@ -20,7 +20,17 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 	private float moved;
 
 	private double noteJudgingSize;
-	
+
+	public SlideNote()
+	{
+		Data = new SlideNoteData(1, -1, 1.2, 10);
+	}
+
+	public SlideNote(SlideNoteData data)
+	{
+		this.Data = data;
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();

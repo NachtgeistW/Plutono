@@ -4,7 +4,6 @@ using Plutono.Scripts.Utils;
 using Plutono.Util;
 using Plutono.Scripts.Game;
 using Plutono.Core.Note.Render;
-using static Godot.CameraFeed;
 
 namespace Plutono.Core.Note
 {
