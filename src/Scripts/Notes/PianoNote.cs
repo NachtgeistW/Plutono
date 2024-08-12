@@ -11,7 +11,7 @@ namespace Plutono.Core.Note
 		public PianoNoteData Data;
 		[Export] public TapNoteRenderer NoteRenderer { get; set; }
 
-		public void Initialize()
+		public override void Initialize()
 		{
 			throw new NotImplementedException();
 		}

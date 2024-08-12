@@ -39,12 +39,8 @@ namespace Plutono.Core.Note
 		{
 			base._Ready();
 
-			noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+			Initialize();
 
-			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.BeginTime;
-			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.EndTime;
-
-			HoldingLength = endZPosInScene - beginZPosInScene;
 			NoteRenderer.OnNoteLoaded(chartPlaySpeed);
 		}
 
@@ -52,6 +48,22 @@ namespace Plutono.Core.Note
 		{
 			base._Process(delta);
 			nowTime += delta;
+		}
+
+		public override void Initialize()
+		{
+			SetNoteJudgingSize();
+			
+			SetHoldData();
+
+			void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+
+			void SetHoldData()
+			{
+				var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.BeginTime;
+				var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (float)Data.EndTime;
+				HoldingLength = endZPosInScene - beginZPosInScene;
+			}
 		}
 
 		public void Move(double curTime, float chartPlaySpeed)

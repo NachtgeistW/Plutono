@@ -35,9 +35,15 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 	{
 		base._Ready();
 
-		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
-
+		Initialize();
 		NoteRenderer.OnNoteLoaded();
+	}
+
+	public override void Initialize()
+	{
+		SetNoteJudgingSize();
+		
+		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 	}
 
 	public void Move(double curTime, float chartPlaySpeed)
@@ -101,7 +107,7 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 
 	public void UpdateSlide(float xPos)
 	{
-		moved = xPos - slideStartXPos;
+		moved = (float)Math.Round(xPos - slideStartXPos, 3);
 	}
 
 	public bool CanBeClear(float xPos, GameMode gameMode)
@@ -124,9 +130,10 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 
 		bool IsReachRequirementPlutono()
 		{
+			if (!IsSliding) return false;
 			if (!IsTouch(xPos, Data.time, out _, out _))
 				return true;
-			return Mathf.Abs(moved) >= noteJudgingSize;
+			return Mathf.Abs(moved) > noteJudgingSize;
 		}
 	} 
 

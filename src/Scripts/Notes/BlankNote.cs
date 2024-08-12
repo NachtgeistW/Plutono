@@ -34,9 +34,15 @@ public partial class BlankNote : Note, IMovable, ITappable
 	{
 		base._Ready();
 
-		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
-
+		Initialize();
 		NoteRenderer.OnNoteLoaded();
+	}
+
+	public override void Initialize()
+	{
+		SetNoteJudgingSize();
+
+		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 	}
 
 	public void Move(double curTime, float chartPlaySpeed)

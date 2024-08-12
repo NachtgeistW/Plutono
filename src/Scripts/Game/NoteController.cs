@@ -1,8 +1,10 @@
 ﻿using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Game;
+using Plutono.Scripts.Utils;
 using Plutono.Util;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class NoteController : Node3D
 {
@@ -85,7 +87,11 @@ public partial class NoteController : Node3D
         {
             note.Move(curTime, chartPlaySpeed);
         }
-	}
+
+        BlankNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
+        SlideNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
+        HoldNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
+    }
 
 	private void OnNoteClear(NoteClearEvent<BlankNote> evt) => BlankNotes.Remove(evt.Note);
     private void OnNoteClear(NoteClearEvent<HoldNote> evt) => HoldNotes.Remove(evt.Note);
