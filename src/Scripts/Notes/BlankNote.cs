@@ -7,7 +7,7 @@ using Plutono.Util;
 
 namespace Plutono.Core.Note;
 
-public partial class BlankNote : Note, IMovable, ITappable
+public partial class BlankNote : Note, IMovableNote, ITappable
 {
 	public BlankNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
@@ -38,7 +38,7 @@ public partial class BlankNote : Note, IMovable, ITappable
 		NoteRenderer.OnNoteLoaded();
 	}
 
-	public override void Initialize()
+	public void Initialize()
 	{
 		SetNoteJudgingSize();
 		return;
@@ -50,7 +50,7 @@ public partial class BlankNote : Note, IMovable, ITappable
 	{
 		var transform = Transform;
 
-		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+		var zPos = (float)(IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
 		transform.Origin.Z = -zPos;
 
 		Transform = transform;
@@ -73,6 +73,11 @@ public partial class BlankNote : Note, IMovable, ITappable
 		}
 	}
 
+	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
+	{
+		throw new NotImplementedException();
+	}
+
 	public void OnClear(NoteGrade grade)
 	{
 		NoteRenderer.OnClear(grade);
@@ -91,9 +96,13 @@ public partial class BlankNote : Note, IMovable, ITappable
 		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 	}
 
-	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
+	public void OnMiss()
 	{
-		throw new NotImplementedException();
+		EventCenter.Broadcast(new NoteMissEvent<BlankNote>
+		{
+			Note = this,
+		});
+		QueueFree();
 	}
 
 	public bool ShouldMiss(double curTime, GameMode mode)

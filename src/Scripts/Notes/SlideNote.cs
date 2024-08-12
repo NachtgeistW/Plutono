@@ -8,7 +8,7 @@ using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note;
 
-public partial class SlideNote : Note, IMovable, ITappable, ISlidable
+public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 {
 	public SlideNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
@@ -39,7 +39,7 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 		NoteRenderer.OnNoteLoaded();
 	}
 
-	public override void Initialize()
+	public void Initialize()
 	{
 		SetNoteJudgingSize();
 		return;
@@ -51,7 +51,7 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 	{
 		var transform = Transform;
 
-		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+		var zPos = (float)(IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
 		transform.Origin.Z = -zPos;
 
 		Transform = transform;
@@ -163,4 +163,12 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 		});
 	}
 
+	public void OnMiss()
+	{
+		EventCenter.Broadcast(new NoteMissEvent<SlideNote>
+		{
+			Note = this,
+		});
+		QueueFree();
+	}
 }

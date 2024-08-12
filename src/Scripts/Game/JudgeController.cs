@@ -50,6 +50,22 @@ public partial class JudgeController : Node3D
 			if (note.Value.IsHolding)
 				note.Value.UpdateHold(Vector3.Zero, TimeControl.CurTime);
 		}
+
+		InvokeMissNoteCleaning(NoteControl.BlankNotes);
+		InvokeMissNoteCleaning(NoteControl.SlideNotes);
+		InvokeMissNoteCleaning(NoteControl.HoldNotes);
+		return;
+
+		void InvokeMissNoteCleaning<T>(List<T> notes) where T : IMovableNote
+		{
+			foreach (var note in notes.ToList())
+			{
+				if (note.ShouldMiss(TimeControl.CurTime, Game.Mode))
+				{
+					note.OnMiss();
+				}
+			}
+		}
 	}
 
 	private void OnFingerDown(FingerDownEvent evt)
@@ -172,7 +188,7 @@ public partial class JudgeController : Node3D
 	/// <returns>The hit note. null if none</returns>
 	private TNote TryGetClosestHitNote<TNote>(List<TNote> notes, Vector3 pos, double touchTime,
 		out float deltaXPos, out NoteGrade grade)
-		where TNote : Note, IMovable
+		where TNote : Note, IMovableNote
 	{
 		TNote note = null;
 		deltaXPos = float.MaxValue;

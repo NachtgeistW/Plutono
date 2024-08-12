@@ -2,17 +2,19 @@ using System;
 using Godot;
 using Plutono.Scripts.Game;
 using Plutono.Scripts.Utils;
+using Plutono.Util;
 
 namespace Plutono.Core.Note;
 
 public interface INote
 {
+	public void Initialize();
+
 }
 
-public interface IMovable : INote
+public interface IMovableNote : INote
 {
 	public void Move(double curTime, float chartPlaySpeed);
-	public bool ShouldMiss(double curTime, GameMode mode);
 
 	/// <summary>
 	/// note 是否被触摸（点击、按着或滑动）
@@ -21,6 +23,9 @@ public interface IMovable : INote
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime);
 
 	public void OnClear(NoteGrade grade);
+	public bool ShouldMiss(double curTime, GameMode mode);
+
+	public void OnMiss();
 
 	protected const float maximumNoteRange = 10f;
 	protected static float NoteFallTime(float chartPlaySpeed)

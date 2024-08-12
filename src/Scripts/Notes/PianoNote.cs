@@ -3,15 +3,16 @@ using Plutono.Core.Note.Render;
 using System;
 using Plutono.Scripts.Game;
 using Plutono.Scripts.Utils;
+using Plutono.Util;
 
 namespace Plutono.Core.Note
 {
-	public partial class PianoNote : Note, IMovable, ITappable, IPianoSoundPlayable
+	public partial class PianoNote : Note, IMovableNote, ITappable, IPianoSoundPlayable
 	{
 		public PianoNoteData Data;
 		[Export] public TapNoteRenderer NoteRenderer { get; set; }
 
-		public override void Initialize()
+		public void Initialize()
 		{
 			throw new NotImplementedException();
 		}
@@ -64,6 +65,15 @@ namespace Plutono.Core.Note
 		public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void OnMiss()
+		{
+			EventCenter.Broadcast(new NoteMissEvent<PianoNote>
+			{
+				Note = this,
+			});
+			QueueFree();
 		}
 
 		public void OnPlayPianoSounds()

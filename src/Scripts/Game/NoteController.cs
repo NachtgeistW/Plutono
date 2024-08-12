@@ -1,10 +1,8 @@
 ﻿using Godot;
 using Plutono.Core.Note;
 using Plutono.Scripts.Game;
-using Plutono.Scripts.Utils;
 using Plutono.Util;
 using System.Collections.Generic;
-using System.Linq;
 
 public partial class NoteController : Node3D
 {
@@ -32,6 +30,9 @@ public partial class NoteController : Node3D
         EventCenter.AddListener<NoteClearEvent<BlankNote>>(OnNoteClear);
         EventCenter.AddListener<NoteClearEvent<HoldNote>>(OnNoteClear);
         EventCenter.AddListener<NoteClearEvent<SlideNote>>(OnNoteClear);
+        EventCenter.AddListener<NoteMissEvent<BlankNote>>(OnNoteMiss);
+        EventCenter.AddListener<NoteMissEvent<HoldNote>>(OnNoteMiss);
+        EventCenter.AddListener<NoteMissEvent<SlideNote>>(OnNoteMiss);
     }
 
     public override void _ExitTree()
@@ -41,11 +42,14 @@ public partial class NoteController : Node3D
         EventCenter.RemoveListener<NoteClearEvent<BlankNote>>(OnNoteClear);
         EventCenter.RemoveListener<NoteClearEvent<HoldNote>>(OnNoteClear);
         EventCenter.RemoveListener<NoteClearEvent<SlideNote>>(OnNoteClear);
+		EventCenter.RemoveListener<NoteMissEvent<BlankNote>>(OnNoteMiss);
+		EventCenter.RemoveListener<NoteMissEvent<HoldNote>>(OnNoteMiss);
+		EventCenter.RemoveListener<NoteMissEvent<SlideNote>>(OnNoteMiss);
     }
 
-    #endregion
+	#endregion
 
-    public override void _Ready()
+	public override void _Ready()
     {
         base._Ready();
 
@@ -87,13 +91,12 @@ public partial class NoteController : Node3D
         {
             note.Move(curTime, chartPlaySpeed);
         }
-
-        BlankNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
-        SlideNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
-        HoldNotes.RemoveAll(x => x.ShouldMiss(curTime, Game.Mode));
     }
 
 	private void OnNoteClear(NoteClearEvent<BlankNote> evt) => BlankNotes.Remove(evt.Note);
     private void OnNoteClear(NoteClearEvent<HoldNote> evt) => HoldNotes.Remove(evt.Note);
     private void OnNoteClear(NoteClearEvent<SlideNote> evt) => SlideNotes.Remove(evt.Note);
+	private void OnNoteMiss(NoteMissEvent<BlankNote> evt) => BlankNotes.Remove(evt.Note);
+    private void OnNoteMiss(NoteMissEvent<HoldNote> evt) => HoldNotes.Remove(evt.Note);
+    private void OnNoteMiss(NoteMissEvent<SlideNote> evt) => SlideNotes.Remove(evt.Note);
 }
