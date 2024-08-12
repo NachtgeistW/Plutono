@@ -89,9 +89,15 @@ public partial class BlankNote : Note, IMovable, ITappable
 		throw new NotImplementedException();
 	}
 
-	public bool ShouldMiss()
+	public bool ShouldMiss(double curTime, GameMode mode)
 	{
-		throw new NotImplementedException();
+		return mode switch
+		{
+			GameMode.Stelo => curTime - Data.time > SteloMode.badDeltaTime,
+			GameMode.Arbo => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Floro => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Autoplay => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+		};
 	}
-
 }

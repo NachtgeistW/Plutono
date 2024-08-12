@@ -1,4 +1,7 @@
+using System;
 using Godot;
+using Plutono.Scripts.Game;
+using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note;
 
@@ -9,7 +12,7 @@ public interface INote
 public interface IMovable : INote
 {
 	public void Move(double curTime, float chartPlaySpeed);
-	public bool ShouldMiss();
+	public bool ShouldMiss(double curTime, GameMode mode);
 
 	/// <summary>
 	/// note 是否被触摸（点击、按着或滑动）

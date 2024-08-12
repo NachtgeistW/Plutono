@@ -192,7 +192,7 @@ namespace Plutono.Core.Note
 			});
 		}
 
-		public bool ShouldMiss()
+		public bool ShouldMiss(double curTime, GameMode mode)
 		{
 			return !IsHolding;
 		}

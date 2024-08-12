@@ -50,9 +50,16 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 		Transform = transform;
 	}
 
-	public bool ShouldMiss()
+	public bool ShouldMiss(double curTime, GameMode mode)
 	{
-		throw new System.NotImplementedException();
+		return mode switch
+		{
+			GameMode.Stelo => curTime - Data.time > SteloMode.badDeltaTime,
+			GameMode.Arbo => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Floro => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Autoplay => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+		};
 	}
 
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
