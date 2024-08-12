@@ -42,7 +42,8 @@ public partial class SlideNote : Note, IMovable, ITappable, ISlidable
 	public override void Initialize()
 	{
 		SetNoteJudgingSize();
-		
+		return;
+
 		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 	}
 

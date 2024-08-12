@@ -10,6 +10,18 @@ using static Assertions;
 public class NoteTest
 {
 	[TestCase]
+	public void TestBlankNoteShouldBeMiss()
+	{
+		BlankNote blankNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
+		blankNote.Initialize();
+		AutoFree(blankNote);
+
+		AssertBool(blankNote.ShouldMiss(1.49, GameMode.Stelo)).IsFalse();
+		AssertBool(blankNote.ShouldMiss(1.6, GameMode.Stelo)).IsFalse();
+		AssertBool(blankNote.ShouldMiss(1.61, GameMode.Stelo)).IsTrue();
+	}
+
+	[TestCase]
     public void TestSlideNoteCanBeClearDeemo()
     {
 	    SlideNote slideNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
@@ -36,18 +48,6 @@ public class NoteTest
 	}
 
 	[TestCase]
-	public void TestBlankNoteShouldBeMiss()
-	{
-		BlankNote blankNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
-		blankNote.Initialize();
-		AutoFree(blankNote);
-
-		AssertBool(blankNote.ShouldMiss(1.49, GameMode.Stelo)).IsFalse();
-		AssertBool(blankNote.ShouldMiss(1.6, GameMode.Stelo)).IsFalse();
-		AssertBool(blankNote.ShouldMiss(1.61, GameMode.Stelo)).IsTrue();
-	}
-
-	[TestCase]
 	public void TestSlideNoteShouldBeMiss()
 	{
 		SlideNote slideNote = new(new SlideNoteData(4, -2f, 1.2, 1.5));
@@ -58,4 +58,6 @@ public class NoteTest
 		AssertBool(slideNote.ShouldMiss(1.6, GameMode.Stelo)).IsFalse();
 		AssertBool(slideNote.ShouldMiss(1.61, GameMode.Stelo)).IsTrue();
 	}
+
+
 }
