@@ -58,12 +58,19 @@ public partial class JudgeController : Node3D
 
 		void InvokeMissNoteCleaning<T>(List<T> notes) where T : IMovableNote
 		{
-			foreach (var note in notes.ToList())
+			var toBeDeleteNoteIndexList = new List<int>();
+
+			for (var i = 0; i < notes.Count; i++)
 			{
-				if (note.ShouldMiss(TimeControl.CurTime, Game.Mode))
+				if (notes[i].ShouldMiss(TimeControl.CurTime, Game.Mode))
 				{
-					note.OnMiss();
+					toBeDeleteNoteIndexList.Add(i);
 				}
+			}
+
+			foreach (var i in toBeDeleteNoteIndexList)
+			{
+				notes[i].OnMiss();
 			}
 		}
 	}
