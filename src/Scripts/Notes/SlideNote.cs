@@ -8,7 +8,7 @@ using Plutono.Scripts.Utils;
 
 namespace Plutono.Core.Note;
 
-public partial class SlideNote : Note, IMovable, ITapable, ISlidable
+public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 {
 	public SlideNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
@@ -20,29 +20,53 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 	private float moved;
 
 	private double noteJudgingSize;
-	
+
+	public SlideNote()
+	{
+		Data = new SlideNoteData(1, -1, 1.2, 10);
+	}
+
+	public SlideNote(SlideNoteData data)
+	{
+		this.Data = data;
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();
 
-		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
-
+		Initialize();
 		NoteRenderer.OnNoteLoaded();
+	}
+
+	public void Initialize()
+	{
+		SetNoteJudgingSize();
+		return;
+
+		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 	}
 
 	public void Move(double curTime, float chartPlaySpeed)
 	{
 		var transform = Transform;
 
-		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+		var zPos = (float)(IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
 		transform.Origin.Z = -zPos;
 
 		Transform = transform;
 	}
 
-	public bool ShouldMiss()
+	public bool ShouldMiss(double curTime, GameMode mode)
 	{
-		throw new System.NotImplementedException();
+		return mode switch
+		{
+			GameMode.Stelo => curTime - Data.time > SteloMode.badDeltaTime,
+			GameMode.Arbo => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Floro => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Autoplay => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+		};
 	}
 
 	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
@@ -84,7 +108,7 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 
 	public void UpdateSlide(float xPos)
 	{
-		moved = xPos - slideStartXPos;
+		moved = (float)Math.Round(xPos - slideStartXPos, 3);
 	}
 
 	public bool CanBeClear(float xPos, GameMode gameMode)
@@ -107,9 +131,10 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 
 		bool IsReachRequirementPlutono()
 		{
+			if (!IsSliding) return false;
 			if (!IsTouch(xPos, Data.time, out _, out _))
 				return true;
-			return Mathf.Abs(moved) >= noteJudgingSize / 2;
+			return Mathf.Abs(moved) > noteJudgingSize;
 		}
 	} 
 
@@ -138,4 +163,12 @@ public partial class SlideNote : Note, IMovable, ITapable, ISlidable
 		});
 	}
 
+	public void OnMiss()
+	{
+		EventCenter.Broadcast(new NoteMissEvent<SlideNote>
+		{
+			Note = this,
+		});
+		QueueFree();
+	}
 }

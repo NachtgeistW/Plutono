@@ -7,7 +7,7 @@ using Plutono.Util;
 
 namespace Plutono.Core.Note;
 
-public partial class BlankNote : Note, IMovable, ITapable
+public partial class BlankNote : Note, IMovableNote, ITappable
 {
 	public BlankNoteData Data { get; set; }
 	[Export] private TapNoteRenderer NoteRenderer { get; set; }
@@ -34,16 +34,23 @@ public partial class BlankNote : Note, IMovable, ITapable
 	{
 		base._Ready();
 
-		noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
-
+		Initialize();
 		NoteRenderer.OnNoteLoaded();
+	}
+
+	public void Initialize()
+	{
+		SetNoteJudgingSize();
+		return;
+
+		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
 	}
 
 	public void Move(double curTime, float chartPlaySpeed)
 	{
 		var transform = Transform;
 
-		var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
+		var zPos = (float)(IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
 		transform.Origin.Z = -zPos;
 
 		Transform = transform;
@@ -66,6 +73,11 @@ public partial class BlankNote : Note, IMovable, ITapable
 		}
 	}
 
+	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
+	{
+		throw new NotImplementedException();
+	}
+
 	public void OnClear(NoteGrade grade)
 	{
 		NoteRenderer.OnClear(grade);
@@ -84,14 +96,24 @@ public partial class BlankNote : Note, IMovable, ITapable
 		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 	}
 
-	public bool OnTap(float xPos, double hitTime, out float deltaXPos, out double deltaTime)
+	public void OnMiss()
 	{
-		throw new NotImplementedException();
+		EventCenter.Broadcast(new NoteMissEvent<BlankNote>
+		{
+			Note = this,
+		});
+		QueueFree();
 	}
 
-	public bool ShouldMiss()
+	public bool ShouldMiss(double curTime, GameMode mode)
 	{
-		throw new NotImplementedException();
+		return mode switch
+		{
+			GameMode.Stelo => curTime - Data.time > SteloMode.badDeltaTime,
+			GameMode.Arbo => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Floro => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Autoplay => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+		};
 	}
-
 }

@@ -3,3 +3,7 @@
 /git_commit.ps1
 .vs/
 
+builds/
+android/
+
+debug.keystore

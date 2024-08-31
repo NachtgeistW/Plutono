@@ -50,6 +50,29 @@ public partial class JudgeController : Node3D
 			if (note.Value.IsHolding)
 				note.Value.UpdateHold(Vector3.Zero, TimeControl.CurTime);
 		}
+
+		InvokeMissNoteCleaning(NoteControl.BlankNotes);
+		InvokeMissNoteCleaning(NoteControl.SlideNotes);
+		InvokeMissNoteCleaning(NoteControl.HoldNotes);
+		return;
+
+		void InvokeMissNoteCleaning<T>(List<T> notes) where T : IMovableNote
+		{
+			var toBeDeleteNoteIndexList = new List<int>();
+
+			for (var i = 0; i < notes.Count; i++)
+			{
+				if (notes[i].ShouldMiss(TimeControl.CurTime, Game.Mode))
+				{
+					toBeDeleteNoteIndexList.Add(i);
+				}
+			}
+
+			foreach (var i in toBeDeleteNoteIndexList)
+			{
+				notes[i].OnMiss();
+			}
+		}
 	}
 
 	private void OnFingerDown(FingerDownEvent evt)
@@ -83,7 +106,7 @@ public partial class JudgeController : Node3D
 					continue;
 				}
 				notesOnHolding.Add(evt.Finger.Index, curDetectingNote);
-				var startGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - curDetectingNote.BeginTime), Game.Mode);
+				var startGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - curDetectingNote.Data.BeginTime), Game.Mode);
 				curDetectingNote.OnHoldStart(worldPos, curTime, startGrade);
 				return;
 			}
@@ -144,7 +167,7 @@ public partial class JudgeController : Node3D
 			{
 				if (note.IsClear) return;
 
-				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.EndTime), Game.Mode);
+				var endGrade = GetNoteGrade(Math.Abs(TimeControl.CurTime - note.Data.EndTime), Game.Mode);
 				note.OnHoldEnd(endGrade, curTime);
 				notesOnHolding.Remove(evt.Finger.Index);
 			}
@@ -172,7 +195,7 @@ public partial class JudgeController : Node3D
 	/// <returns>The hit note. null if none</returns>
 	private TNote TryGetClosestHitNote<TNote>(List<TNote> notes, Vector3 pos, double touchTime,
 		out float deltaXPos, out NoteGrade grade)
-		where TNote : Note, IMovable
+		where TNote : Note, IMovableNote
 	{
 		TNote note = null;
 		deltaXPos = float.MaxValue;

@@ -23,6 +23,12 @@ project/assembly_name="plutono"
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
+[gdunit4]
+
+ui/inspector/tree_view_mode=1
+ui/toolbar/run_overall=true
+
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

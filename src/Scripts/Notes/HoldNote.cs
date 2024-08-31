@@ -4,200 +4,227 @@ using Plutono.Scripts.Utils;
 using Plutono.Util;
 using Plutono.Scripts.Game;
 using Plutono.Core.Note.Render;
-using static Godot.CameraFeed;
 
-namespace Plutono.Core.Note
+namespace Plutono.Core.Note;
+
+public partial class HoldNote : Note, IMovableNote, IHoldable
 {
-	public partial class HoldNote : Note, IMovable, IHoldable
+	public HoldNoteData Data;
+	[Export] private HoldNoteRenderer NoteRenderer { get; set; }
+
+	public float chartPlaySpeed;
+
+	public float HoldingLength;
+
+	private double noteJudgingSize;
+	public double HoldingStartingTime { get; protected set; } = float.MaxValue;
+	public double HeldDuration { get; protected set; }
+	//public List<int> HoldingFingers { get; } = new List<int>(2);
+	public bool IsHolding { get; protected set; }
+	public bool IsClear { get; private set; }
+
+	private double nowTime;
+
+	public HoldNote()
 	{
-		public HoldNoteData Data;
-		[Export] private HoldNoteRenderer NoteRenderer { get; set; }
+		chartPlaySpeed = 5f;
+	}
 
-		public float chartPlaySpeed;
+	public HoldNote(float playSpeed)
+	{
+		chartPlaySpeed = playSpeed;
+	}
 
-		public float BeginTime { get; private set; } = 1.5f;
-		public float EndTime { get; private set; } = 4.5f;
-		public float HoldingLength;
+	public override void _Ready()
+	{
+		base._Ready();
 
-		private double noteJudgingSize;
-		public double HoldingStartingTime { get; protected set; } = float.MaxValue;
-		public double HeldDuration { get; protected set; }
-		//public List<int> HoldingFingers { get; } = new List<int>(2);
-		public bool IsHolding { get; protected set; }
-		public bool IsClear { get; private set; }
+		Initialize();
 
-		private double nowTime;
+		NoteRenderer.OnNoteLoaded(chartPlaySpeed);
+	}
 
-		public HoldNote()
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+		nowTime += delta;
+	}
+
+	public void Initialize()
+	{
+		SetNoteJudgingSize();
+			
+		SetHoldData();
+		return;
+
+		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
+
+		void SetHoldData()
 		{
-			chartPlaySpeed = 5f;
-		}
-
-		public HoldNote(float playSpeed)
-		{
-			chartPlaySpeed = playSpeed;
-		}
-
-		public override void _Ready()
-		{
-			base._Ready();
-
-			noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;
-
-			var beginZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * BeginTime;
-			var endZPosInScene = IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * EndTime;
-
+			var beginZPosInScene = IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (float)Data.BeginTime;
+			var endZPosInScene = IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (float)Data.EndTime;
 			HoldingLength = endZPosInScene - beginZPosInScene;
-			NoteRenderer.OnNoteLoaded(chartPlaySpeed);
 		}
+	}
 
-		public override void _Process(double delta)
+	public void Move(double curTime, float chartPlaySpeed)
+	{
+		if (!IsHolding)
 		{
-			base._Process(delta);
-			nowTime += delta;
+			var transform = Transform;
+
+			var zPos = (float)(IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (Data.BeginTime - curTime));
+			transform.Origin.Z = -zPos;
+
+			Transform = transform;
 		}
+	}
 
-		public void Move(double curTime, float chartPlaySpeed)
+	public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
+	{
+		var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
+		if (noteDeltaXPos <= noteJudgingSize)
 		{
-			if (!IsHolding)
+			deltaXPos = noteDeltaXPos;
+			deltaTime = Math.Abs(touchTime - Data.BeginTime);
+			return true;
+		}
+		else
+		{
+			deltaXPos = float.MaxValue;
+			deltaTime = double.MaxValue;
+			return false;
+		}
+	}
+
+	public void OnHoldStart(Vector3 worldPos, double curTime, NoteGrade grade)
+	{
+		/*计算手势是否点到自己
+         if 点到自己
+        {
+            判定离开判定区间 = false
+            isHolding = true;
+            统计分数和生成特效
+            移出头判判定序列
+          移入按住判定的判定序列
+        }*/
+		if (!IsHolding)
+		{
+			IsHolding = true;
+			HoldingStartingTime = curTime;
+			Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} HoldingLength {HoldingLength}");
+
+			nowTime = curTime;
+
+			//NoteRenderer.head.Hide();
+			NoteRenderer.SetExplosionColour(grade);
+		}
+	}
+
+	public void UpdateHold(Vector3 worldPos, double curTime)
+	{
+		if (IsHolding)
+		{
+			HeldDuration = (IMovableNote.maximumNoteRange / IMovableNote.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
+			//Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
+
+			//TODO:Verify 0.001
+			if (HoldingLength - HeldDuration < 0.0001)
 			{
-				var transform = Transform;
-
-				var zPos = (float)(IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (Data.time - curTime));
-				transform.Origin.Z = -zPos;
-
-				Transform = transform;
+				OnHoldEnd(NoteGrade.Perfect);
 			}
 		}
-
-		public bool IsTouch(float xPos, double touchTime, out float deltaXPos, out double deltaTime)
+		else
 		{
-			var noteDeltaXPos = Mathf.Abs(xPos - Data.pos);
-			if (noteDeltaXPos <= noteJudgingSize)
-			{
-				deltaXPos = noteDeltaXPos;
-				deltaTime = Math.Abs(touchTime - Data.time);
-				return true;
-			}
-			else
-			{
-				deltaXPos = float.MaxValue;
-				deltaTime = double.MaxValue;
-				return false;
-			}
+			Debug.Log("!IsHolding");
+			OnHoldMiss();
 		}
 
-		public void OnHoldStart(Vector3 worldPos, double curTime, NoteGrade grade)
-		{
-			/*计算手势是否点到自己
-             if 点到自己
+		/*
+        if isHolding
+        {
+            计时
+            isHolding = false
+            修改音符长度和位置
+            if 计时器 > 按住的时间
             {
-                判定离开判定区间 = false
-                isHolding = true;
-                统计分数和生成特效
-                移出头判判定序列
-              移入按住判定的判定序列
-            }*/
-			if (!IsHolding)
-			{
-				IsHolding = true;
-				HoldingStartingTime = curTime;
-				Debug.Log($"OnHoldStart HoldingStartingTime {HoldingStartingTime} HoldingLength {HoldingLength}");
-
-				nowTime = curTime;
-
-				//NoteRenderer.head.Hide();
-				NoteRenderer.SetExplosionColour(grade);
-			}
-		}
-
-		public void UpdateHold(Vector3 worldPos, double curTime)
-		{
-			if (IsHolding)
-			{
-				HeldDuration = (IMovable.maximumNoteRange / IMovable.NoteFallTime(chartPlaySpeed) * (curTime - HoldingStartingTime));
-				//Debug.Log($"curTime {curTime} HeldDuration {HeldDuration}");
-
-				//TODO:Verify 0.001
-				if (HoldingLength - HeldDuration < 0.0001)
-				{
-					OnHoldEnd(NoteGrade.Perfect);
-				}
-			}
-			else
-			{
-				Debug.Log("!IsHolding");
-				OnHoldMiss();
-			}
-
-			/*
-            if isHolding
-            {
-                计时
-                isHolding = false
-                修改音符长度和位置
-                if 计时器 > 按住的时间
-                {
-                    OnHoldEnd()
-                }
-                else
-                {
-                    OnHoldMiss
-                }
+                OnHoldEnd()
             }
-
-            isHolding一直为true的方法：
-            public bool holding值调整(Vector2 worldPos)
+            else
             {
-                计算手势是否点到自己
-                if 点到自己
-                {
-                    isHolding = true
-                }
+                OnHoldMiss
             }
-            */
-		}
+        }
 
-		public void OnHoldEnd(NoteGrade grade)
-		{
-			/*
-                统计分数和生成特效
-                将自己移出判定序列
-                删除自己
-            */
-			Debug.Log($"OnHoldEnd");
-			IsHolding = false;
-			IsClear = true;
-			OnClear(grade);
-			//QueueFree();
-		}
+        isHolding一直为true的方法：
+        public bool holding值调整(Vector2 worldPos)
+        {
+            计算手势是否点到自己
+            if 点到自己
+            {
+                isHolding = true
+            }
+        }
+        */
+	}
 
-		public void OnHoldEnd(NoteGrade grade, double curTime)
-		{
-			OnHoldEnd(grade);
-			Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-			          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
-		}
+	public void OnHoldEnd(NoteGrade grade)
+	{
+		/*
+            统计分数和生成特效
+            将自己移出判定序列
+            删除自己
+        */
+		Debug.Log($"OnHoldEnd");
+		IsHolding = false;
+		IsClear = true;
+		OnClear(grade);
+		//QueueFree();
+	}
 
-		public void OnHoldMiss()
-		{
-			Debug.Log("OnHoldMiss");
-		}
+	public void OnHoldEnd(NoteGrade grade, double curTime)
+	{
+		OnHoldEnd(grade);
+		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
+		          $"Note: {Data.id} Time: {Data.BeginTime} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
+	}
 
-		public void OnClear(NoteGrade grade)
-		{
-			NoteRenderer.OnClear(grade);
-			EventCenter.Broadcast(new NoteClearEvent<HoldNote>
-			{
-				Note = this,
-				Grade = grade,
-				//DeltaXPos = deltaXPos
-			});
-		}
+	public void OnHoldMiss()
+	{
+		Debug.Log("OnHoldMiss");
+	}
 
-		public bool ShouldMiss()
+	public void OnClear(NoteGrade grade)
+	{
+		NoteRenderer.OnClear(grade);
+		EventCenter.Broadcast(new NoteClearEvent<HoldNote>
 		{
-			return !IsHolding;
-		}
+			Note = this,
+			Grade = grade,
+			//DeltaXPos = deltaXPos
+		});
+	}
+
+	public bool ShouldMiss(double curTime, GameMode mode)
+	{
+		var shouldMiss = !IsHolding;
+		shouldMiss &= mode switch
+		{
+			GameMode.Stelo => curTime - Data.BeginTime > SteloMode.badDeltaTime,
+			GameMode.Arbo => curTime - Data.BeginTime > ArboMode.badDeltaTime,
+			GameMode.Floro => curTime - Data.BeginTime > ArboMode.badDeltaTime,
+			GameMode.Autoplay => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+		};
+		return shouldMiss;
+	}
+
+	public void OnMiss()
+	{
+		EventCenter.Broadcast(new NoteMissEvent<HoldNote>
+		{
+			Note = this,
+		});
+		QueueFree();
 	}
 }
