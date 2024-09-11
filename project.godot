@@ -15,6 +15,10 @@ run/main_scene="res://src/Scenes/Gameplay.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+OsDetector="*res://src/Scripts/Utils/OsDetector.cs"
+
 [dotnet]
 
 project/assembly_name="plutono"
@@ -27,6 +31,18 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
 ui/inspector/tree_view_mode=1
 ui/toolbar/run_overall=true
+
+[input]
+
+open_debug={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(200, 17),"global_position":Vector2(206, 79),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
+
+[internationalization]
+
+locale/locale_filter_mode=1
 
 [rendering]
 
