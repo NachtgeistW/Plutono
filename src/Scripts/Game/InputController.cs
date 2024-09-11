@@ -12,53 +12,100 @@ public partial class InputController : Node
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left } eventMouseButton)
+        if (OsDetector.Platform == Platform.PC)
         {
-	        if (eventMouseButton.IsPressed())
-	        {
-		        Debug.Log("InputEventMouseButton Pressed");
-		        OnFingerDown(eventMouseButton.Position);
-	        }
-	        else
-	        {
-		        Debug.Log("InputEventMouseButton Released");
-		        OnFingerUp(eventMouseButton.Position);
-	        }
-	        Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-	        Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
-        }
+            if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left } eventMouseButton)
+            {
+	            if (eventMouseButton.IsPressed())
+	            {
+		            Debug.Log("InputEventMouseButton Pressed");
+		            OnFingerDown(eventMouseButton.Position, 0);
+	            }
+	            else
+	            {
+		            Debug.Log("InputEventMouseButton Released");
+		            OnFingerUp(eventMouseButton.Position, 0);
+	            }
+	            Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
+	            Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
+            }
 
-        if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
+            if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
+            {
+	            if (lastPosition == Vector2.Inf)
+	            {
+		            lastPosition = inputEventMouseMotion.Position;
+	            }
+
+	            if ((inputEventMouseMotion.Position - lastPosition).Length() > 10f)
+	            {
+				    Debug.Log($"InputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}");
+				    OnFingerMove(inputEventMouseMotion.Position, 0);
+	            }
+            }
+        }
+        else if (OsDetector.Platform is Platform.Android or Platform.iOS)
         {
-	        if (lastPosition == Vector2.Inf)
-	        {
-		        lastPosition = inputEventMouseMotion.Position;
-	        }
+			if (@event is InputEventScreenDrag eventScreenDrag)
+			{
+				if (lastPosition == Vector2.Inf)
+				{
+					lastPosition = eventScreenDrag.Position;
+				}
 
-	        if ((inputEventMouseMotion.Position - lastPosition).Length() > 10f)
-	        {
-				Debug.Log($"InputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}");
-				OnFingerMove(inputEventMouseMotion.Position);
-	        }
-        }
+				if ((eventScreenDrag.Position - lastPosition).Length() > 10f)
+				{
+					Debug.Log($"InputEventMouseMotion Moved {(eventScreenDrag.Position - lastPosition).Length()}");
+					OnFingerMove(eventScreenDrag.Position, eventScreenDrag.Index);
+				}
+			}
+            if (@event is InputEventScreenTouch eventScreenTouch)
+            {
+                if (eventScreenTouch.IsPressed())
+                {
+	                Debug.Log("InputEventScreenTouch Pressed");
+	                OnFingerDown(eventScreenTouch.Position, eventScreenTouch.Index);
+				}
+				else
+				{
+					Debug.Log("InputEventScreenTouch Released");
+					OnFingerUp(eventScreenTouch.Position, eventScreenTouch.Index);
+				}
+				Debug.Log($"Mouse Click/Unclick at: {eventScreenTouch.Position}, Finger index: {eventScreenTouch.Index}");
+				Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventScreenTouch.Position), " ", TimeControl.CurTime);
+			}
+		}
     }
 
-    private void OnFingerDown(Vector2 screenPos)
+    private void OnFingerDown(Vector2 screenPos, int fingerIndex)
     {
 	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
-	    EventCenter.Broadcast(new FingerDownEvent { WorldPos = pos, Time = TimeControl.CurTime });
+	    EventCenter.Broadcast(new FingerDownEvent
+	    {
+            Finger = new Finger { Position = screenPos, Index = fingerIndex },
+		    WorldPos = pos, 
+		    Time = TimeControl.CurTime
+	    });
     }
 
-    private void OnFingerMove(Vector2 screenPos)
+    private void OnFingerMove(Vector2 screenPos, int fingerIndex)
     {
 	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
-	    EventCenter.Broadcast(new FingerMoveEvent { Finger = new Finger(), WorldPos = pos, Time = TimeControl.CurTime });
+	    EventCenter.Broadcast(new FingerMoveEvent {
+		    Finger = new Finger { Position = screenPos, Index = fingerIndex },
+            WorldPos = pos, 
+            Time = TimeControl.CurTime 
+        });
     }
 
-    private void OnFingerUp(Vector2 screenPos)
+    private void OnFingerUp(Vector2 screenPos, int fingerIndex)
     {
 	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
-	    EventCenter.Broadcast(new FingerUpEvent { WorldPos = pos, Time = TimeControl.CurTime });
+	    EventCenter.Broadcast(new FingerUpEvent {
+			Finger = new Finger { Position = screenPos, Index = fingerIndex },
+            WorldPos = pos, 
+            Time = TimeControl.CurTime 
+        });
     }
 
 	/// <summary>
