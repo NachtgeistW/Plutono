@@ -427,20 +427,20 @@ note = NodePath("..")
 [node name="Node" type="Node3D" parent="Renderer"]
 
 [node name="head" type="Sprite3D" parent="Renderer/Node"]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 axis = 1
 render_priority = 2
 texture = ExtResource("3_xuw4j")
 
 [node name="body" type="Sprite3D" parent="Renderer/Node"]
-transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 axis = 1
 render_priority = 1
 texture = ExtResource("4_63524")
 region_rect = Rect2(0, 0, 128, 128)
 
 [node name="end" type="Sprite3D" parent="Renderer/Node"]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+transform = Transform3D(1.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 axis = 1
 render_priority = 2
 texture = ExtResource("3_xuw4j")

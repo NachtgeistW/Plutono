@@ -64,7 +64,7 @@ namespace Plutono.Core.Note.Render
 			body.Transform = bodyTransform;
 			end.Transform = endTransform;
 
-			body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
+			body.Scale = new Vector3(bodyTransform.Basis.Scale.X, 1, length * Parameters.pixel_per_unit / height / 2);
 
 			explosion.Visible = false;
 			explosion.Position = head.Position;
@@ -100,7 +100,7 @@ namespace Plutono.Core.Note.Render
 				var bodyTransform = body.Transform;
 				bodyTransform.Origin = new Vector3(bodyTransform.Origin.X, bodyTransform.Origin.Y, headPosition - length / 2);
 				body.Transform = bodyTransform;
-				body.Scale = new Vector3(2, 1, length * Parameters.pixel_per_unit / height / 2);
+				body.Scale = new Vector3(bodyTransform.Basis.Scale.X, 1, length * Parameters.pixel_per_unit / height / 2);
 			}
 
 			void UpdateExplosion()
