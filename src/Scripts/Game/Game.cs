@@ -9,6 +9,7 @@ public partial class Game : Node3D
 {
     [Export] public TimeController TimeControl { get; set; }
 
+    [Export] public Camera3D GameCamera { get; set; }
     [Export] public Camera3D OrthographicCamera { get; set; }
     [Export] public RichTextLabel CurTimeText { get; set; }
 

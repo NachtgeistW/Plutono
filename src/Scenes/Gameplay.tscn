@@ -236,9 +236,10 @@ animations = [{
 "speed": 50.0
 }]
 
-[node name="Game" type="Node3D" node_paths=PackedStringArray("TimeControl", "OrthographicCamera", "CurTimeText")]
+[node name="Game" type="Node3D" node_paths=PackedStringArray("TimeControl", "GameCamera", "OrthographicCamera", "CurTimeText")]
 script = ExtResource("1_2xpy6")
 TimeControl = NodePath("Controllers/TimeController")
+GameCamera = NodePath("Camera/Game Camera")
 OrthographicCamera = NodePath("Camera/Orthographic Camera")
 CurTimeText = NodePath("GUI/CurTimeText")
 
@@ -300,7 +301,7 @@ animation = &"perfect"
 [node name="Judgline" type="Node3D" parent="Stage"]
 
 [node name="Sprite_Judgline" type="Sprite3D" parent="Stage/Judgline"]
-transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, 0)
+transform = Transform3D(19.575, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, 0)
 axis = 1
 render_priority = -10
 texture = ExtResource("1_78axj")

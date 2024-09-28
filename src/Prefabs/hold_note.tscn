@@ -3,11 +3,9 @@
 [ext_resource type="Script" path="res://src/Scripts/Notes/HoldNote.cs" id="1_ukfe3"]
 [ext_resource type="Script" path="res://src/Scripts/Notes/Renderer/HoldNoteRenderer.cs" id="2_1lmoj"]
 [ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="3_xuw4j"]
+[ext_resource type="Texture2D" uid="uid://d38dsgekcaets" path="res://src/Textures/icon.png" id="4_63524"]
 [ext_resource type="Texture2D" uid="uid://73udw5uknn6f" path="res://src/Textures/40.png" id="5_8iawp"]
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://src/Textures/39.png" id="5_qoga3"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1psu6"]
-load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.s3tc.ctex"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gytkk"]
 atlas = ExtResource("5_8iawp")
@@ -438,7 +436,7 @@ texture = ExtResource("3_xuw4j")
 transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 axis = 1
 render_priority = 1
-texture = SubResource("CompressedTexture2D_1psu6")
+texture = ExtResource("4_63524")
 region_rect = Rect2(0, 0, 128, 128)
 
 [node name="end" type="Sprite3D" parent="Renderer/Node"]

@@ -26,8 +26,8 @@ public partial class InputController : Node
 		            Debug.Log("InputEventMouseButton Released");
 		            OnFingerUp(eventMouseButton.Position, 0);
 	            }
-	            Debug.Log("Mouse Click/Unclick at: ", eventMouseButton.Position);
-	            Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
+	            Debug.Log("---\nMouse Click/Unclick at: ", eventMouseButton.Position);
+	            Debug.Log(ScreenToWorldPoint(Game.GameCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
             }
 
             if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
@@ -72,14 +72,14 @@ public partial class InputController : Node
 					OnFingerUp(eventScreenTouch.Position, eventScreenTouch.Index);
 				}
 				Debug.Log($"Mouse Click/Unclick at: {eventScreenTouch.Position}, Finger index: {eventScreenTouch.Index}");
-				Debug.Log(ScreenToWorldPoint(Game.OrthographicCamera, eventScreenTouch.Position), " ", TimeControl.CurTime);
+				Debug.Log(ScreenToWorldPoint(Game.GameCamera, eventScreenTouch.Position), " ", TimeControl.CurTime);
 			}
 		}
     }
 
     private void OnFingerDown(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
+	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
 	    EventCenter.Broadcast(new FingerDownEvent
 	    {
             Finger = new Finger { Position = screenPos, Index = fingerIndex },
@@ -90,7 +90,7 @@ public partial class InputController : Node
 
     private void OnFingerMove(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
+	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
 	    EventCenter.Broadcast(new FingerMoveEvent {
 		    Finger = new Finger { Position = screenPos, Index = fingerIndex },
             WorldPos = pos, 
@@ -100,7 +100,7 @@ public partial class InputController : Node
 
     private void OnFingerUp(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.OrthographicCamera, screenPos);
+	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
 	    EventCenter.Broadcast(new FingerUpEvent {
 			Finger = new Finger { Position = screenPos, Index = fingerIndex },
             WorldPos = pos, 
@@ -116,7 +116,7 @@ public partial class InputController : Node
 	/// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
 	private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 screenPos)
     {
-        return camera.ProjectPosition(screenPos, camera.GlobalTransform.Origin.Z);
+        return camera.ProjectPosition(screenPos, 0);
     }
 }
 
