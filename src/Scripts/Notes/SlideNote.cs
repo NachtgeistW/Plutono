@@ -23,7 +23,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 
 	public SlideNote()
 	{
-		Data = new SlideNoteData(1, -1, 1.2, 10);
+		Data = new SlideNoteData(1, -1, 2.4, 10);
 	}
 
 	public SlideNote(SlideNoteData data)
@@ -36,12 +36,14 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 		base._Ready();
 
 		Initialize();
-		NoteRenderer.OnNoteLoaded();
+		NoteRenderer.OnNoteLoaded(Data);
 	}
 
 	public void Initialize()
 	{
 		SetNoteJudgingSize();
+		noteJudgingSize = 2.4;
+		Debug.Log(noteJudgingSize);
 		return;
 
 		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;

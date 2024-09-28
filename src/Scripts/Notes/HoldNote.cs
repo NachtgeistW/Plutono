@@ -55,6 +55,8 @@ public partial class HoldNote : Note, IMovableNote, IHoldable
 		SetNoteJudgingSize();
 			
 		SetHoldData();
+		noteJudgingSize = 2.4;
+		Debug.Log(noteJudgingSize);
 		return;
 
 		void SetNoteJudgingSize() => noteJudgingSize = Data.size < 1.2 ? 0.6 * Parameters.noteSizeScale : Data.size * Parameters.noteSizeScale / 2;

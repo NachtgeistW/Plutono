@@ -8,7 +8,7 @@ namespace Plutono.Core.Note.Render
         [Export] private Sprite3D noteSprite;
         [Export] private AnimatedSprite3D explosion;
 
-        public bool DisplayNoteId { get; set; }
+		public bool DisplayNoteId { get; set; }
 
         public TapNoteRenderer()
         {
@@ -28,12 +28,15 @@ namespace Plutono.Core.Note.Render
             explosion.AnimationFinished -= OnExplosionAnimateFinish;
         }
 
-        public void OnNoteLoaded()
+        public void OnNoteLoaded(NoteData noteData)
         {
             explosion.Visible = false;
-        }
 
-        public void Move(double elapsedTime, float chartPlaySpeed)
+            noteSprite.Scale = new Vector3((float)(noteSprite.Basis.Scale.X * noteData.size), noteSprite.Basis.Scale.Y,
+	            noteSprite.Basis.Scale.Z);
+		}
+
+		public void Move(double elapsedTime, float chartPlaySpeed)
         {
             var transform = Transform;
 
