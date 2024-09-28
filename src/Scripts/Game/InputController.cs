@@ -7,8 +7,11 @@ public partial class InputController : Node
 {
     [Export] private Game Game { get; set; }
     [Export] private TimeController TimeControl { get; set; }
+    [Export] private Camera3D perspectiveCamera;
+    [Export] private Camera3D orthographicCamera;
 
-    private Vector2 lastPosition = Vector2.Inf;
+
+	private Vector2 lastPosition = Vector2.Inf;
 
     public override void _Input(InputEvent @event)
     {
@@ -20,17 +23,21 @@ public partial class InputController : Node
 	            {
 		            Debug.Log("InputEventMouseButton Pressed");
 		            OnFingerDown(eventMouseButton.Position, 0);
+
+		            Vector3 worldPos = ConvertPerspectiveToOrthographic(eventMouseButton.Position);
+		            Debug.Log("Converted world position: ", worldPos);
 	            }
 	            else
 	            {
 		            Debug.Log("InputEventMouseButton Released");
 		            OnFingerUp(eventMouseButton.Position, 0);
 	            }
+	            
 	            Debug.Log("---\nMouse Click/Unclick at: ", eventMouseButton.Position);
-	            Debug.Log(ScreenToWorldPoint(Game.GameCamera, eventMouseButton.Position), " ", TimeControl.CurTime);
-            }
+	            Debug.Log(ConvertPerspectiveToOrthographic(eventMouseButton.Position), " ", TimeControl.CurTime);
+			}
 
-            if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
+			if (@event is InputEventMouseMotion { ButtonMask: MouseButtonMask.Left } inputEventMouseMotion)
             {
 	            if (lastPosition == Vector2.Inf)
 	            {
@@ -72,14 +79,15 @@ public partial class InputController : Node
 					OnFingerUp(eventScreenTouch.Position, eventScreenTouch.Index);
 				}
 				Debug.Log($"Mouse Click/Unclick at: {eventScreenTouch.Position}, Finger index: {eventScreenTouch.Index}");
-				Debug.Log(ScreenToWorldPoint(Game.GameCamera, eventScreenTouch.Position), " ", TimeControl.CurTime);
+				Debug.Log(ConvertPerspectiveToOrthographic(eventScreenTouch.Position), " ", TimeControl.CurTime);
+
 			}
 		}
     }
 
     private void OnFingerDown(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
+	    var pos = ConvertPerspectiveToOrthographic(screenPos);
 	    EventCenter.Broadcast(new FingerDownEvent
 	    {
             Finger = new Finger { Position = screenPos, Index = fingerIndex },
@@ -90,7 +98,7 @@ public partial class InputController : Node
 
     private void OnFingerMove(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
+	    var pos = ConvertPerspectiveToOrthographic(screenPos);
 	    EventCenter.Broadcast(new FingerMoveEvent {
 		    Finger = new Finger { Position = screenPos, Index = fingerIndex },
             WorldPos = pos, 
@@ -100,7 +108,7 @@ public partial class InputController : Node
 
     private void OnFingerUp(Vector2 screenPos, int fingerIndex)
     {
-	    var pos = ScreenToWorldPoint(Game.GameCamera, screenPos);
+	    var pos = ConvertPerspectiveToOrthographic(screenPos);
 	    EventCenter.Broadcast(new FingerUpEvent {
 			Finger = new Finger { Position = screenPos, Index = fingerIndex },
             WorldPos = pos, 
@@ -116,8 +124,23 @@ public partial class InputController : Node
 	/// <returns>WorldPoint, or Vector3.Inf if worldPoint is null</returns>
 	private static Vector3 ScreenToWorldPoint(Camera3D camera, Vector2 screenPos)
     {
-        return camera.ProjectPosition(screenPos, 0);
+        return camera.ProjectPosition(screenPos, camera.Position.Z);
     }
+
+	private Vector3 ConvertPerspectiveToOrthographic(Vector2 screenPosition)
+	{
+		Vector3 rayOrigin = perspectiveCamera.ProjectRayOrigin(screenPosition);
+		Vector3 rayDirection = perspectiveCamera.ProjectRayNormal(screenPosition);
+
+		float t = -rayOrigin.Z / rayDirection.Z;
+		Vector3 intersectionPoint = rayOrigin + rayDirection * t;
+
+		Vector2 orthoScreenPosition = orthographicCamera.UnprojectPosition(intersectionPoint);
+		
+		Vector3 finalWorldPosition = orthographicCamera.ProjectRayOrigin(orthoScreenPosition);
+
+		return finalWorldPosition;
+	}
 }
 
 public struct FingerDownEvent : IEvent

@@ -249,10 +249,12 @@ CurTimeText = NodePath("GUI/CurTimeText")
 script = ExtResource("2_ru3fu")
 player = NodePath("../../Player")
 
-[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl")]
+[node name="InputController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl", "perspectiveCamera", "orthographicCamera")]
 script = ExtResource("2_jx4w1")
 Game = NodePath("../..")
 TimeControl = NodePath("../TimeController")
+perspectiveCamera = NodePath("../../Camera/Game Camera")
+orthographicCamera = NodePath("../../Camera/Orthographic Camera")
 
 [node name="NoteController" type="Node3D" parent="Controllers" node_paths=PackedStringArray("Game", "TimeControl", "blankNote", "blankNote2", "holdNote", "slideNote", "slideNote2", "slideNote3")]
 script = ExtResource("3_gb8kx")
