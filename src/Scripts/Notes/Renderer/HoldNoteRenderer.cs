@@ -16,7 +16,11 @@ namespace Plutono.Core.Note.Render
 		private float width = 128;
 		private float height = 128;
 
-		bool INoteRenderer.DisplayNoteId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		bool INoteRenderer.DisplayNoteId
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
 
 		public HoldNoteRenderer()
 		{
