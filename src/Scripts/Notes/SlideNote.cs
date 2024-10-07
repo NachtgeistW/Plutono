@@ -63,9 +63,9 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 	{
 		return mode switch
 		{
-			GameMode.Stelo => curTime - Data.time > SteloMode.badDeltaTime,
-			GameMode.Arbo => curTime - Data.time > ArboMode.badDeltaTime,
-			GameMode.Floro => curTime - Data.time > ArboMode.badDeltaTime,
+			GameMode.Stelo => curTime - Data.time > SteloMode.goodDeltaTime,
+			GameMode.Arbo => curTime - Data.time > ArboMode.goodDeltaTime,
+			GameMode.Floro => curTime - Data.time > ArboMode.goodDeltaTime,
 			GameMode.Autoplay => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
 		};
@@ -143,22 +143,31 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 
 	public void OnSlideEnd(NoteGrade grade)
 	{
-		Debug.Log("OnSlideEnd");
 		IsSliding = false;
-		IsClear = true;
-		OnClear(grade);
+
+		if (grade == NoteGrade.Miss)
+		{
+			OnMiss();
+		}
+		else
+		{
+			OnClear(grade);
+		}
 	}
 
 	public void OnSlideEnd(NoteGrade grade, double curTime)
 	{
 		OnSlideEnd(grade);
-		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}\n" +
-				  $"SlideStartXPos: {slideStartXPos} SlideStartTime: {SlideStartTime}");
+
+		Debug.Log("---\nOnSlideEnd" +
+			$"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}\n" +
+		    $"SlideStartXPos: {slideStartXPos} SlideStartTime: {SlideStartTime}");
 	}
 
 	public void OnClear(NoteGrade grade)
 	{
+		IsClear = true;
+
 		NoteRenderer.OnClear(grade);
 		EventCenter.Broadcast(new NoteClearEvent<SlideNote>
 		{
@@ -167,9 +176,16 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 		});
 	}
 
+	public void OnMiss(double curTime)
+	{
+		Debug.Log($"---\nOnMiss\nNote: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos}");
+		OnMiss();
+	}
+
 	public void OnMiss()
 	{
 		IsClear = true;
+
 		EventCenter.Broadcast(new NoteMissEvent<SlideNote>
 		{
 			Note = this,

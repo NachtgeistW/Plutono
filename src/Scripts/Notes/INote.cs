@@ -25,7 +25,7 @@ public interface IMovableNote : INote
 	public void OnClear(NoteGrade grade);
 	public bool ShouldMiss(double curTime, GameMode mode);
 
-	public void OnMiss();
+	public void OnMiss(double curTime);
 
 	protected const float maximumNoteRange = 10f;
 	protected static float NoteFallTime(float chartPlaySpeed)
