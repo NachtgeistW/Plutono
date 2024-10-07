@@ -67,6 +67,12 @@ namespace Plutono.Core.Note
 			throw new NotImplementedException();
 		}
 
+		public void OnMiss(double curTime)
+		{
+			Debug.Log($"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos}");
+			OnMiss();
+		}
+
 		public void OnMiss()
 		{
 			EventCenter.Broadcast(new NoteMissEvent<PianoNote>

@@ -98,6 +98,12 @@ public partial class BlankNote : Note, IMovableNote, ITappable
 		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
 	}
 
+	public void OnMiss(double curTime)
+	{
+		Debug.Log($"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos}");
+		OnMiss();
+	}
+
 	public void OnMiss()
 	{
 		EventCenter.Broadcast(new NoteMissEvent<BlankNote>

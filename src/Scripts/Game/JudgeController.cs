@@ -70,7 +70,7 @@ public partial class JudgeController : Node3D
 
 			foreach (var i in toBeDeleteNoteIndexList)
 			{
-				notes[i].OnMiss();
+				notes[i].OnMiss(TimeControl.CurTime);
 			}
 		}
 	}
@@ -85,6 +85,8 @@ public partial class JudgeController : Node3D
 			foreach (var curDetectingNote in NoteControl.SlideNotes
 						 .Where(note => note.OnTap(worldPos.X, curTime, out _, out _)))
 			{
+				if (curDetectingNote.IsClear) continue;
+
 				if (notesOnSliding.ContainsKey(evt.Finger.Index) || notesOnSliding.ContainsValue(curDetectingNote))
 				{
 					// Player is sliding on another note, pass

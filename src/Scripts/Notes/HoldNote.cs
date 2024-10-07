@@ -221,6 +221,12 @@ public partial class HoldNote : Note, IMovableNote, IHoldable
 		return shouldMiss;
 	}
 
+	public void OnMiss(double curTime)
+	{
+		Debug.Log($"---\nNote: {Data.id} Time: {Data.EndTime} CurTime: {curTime} Pos: {Data.pos}");
+		OnMiss();
+	}
+
 	public void OnMiss()
 	{
 		EventCenter.Broadcast(new NoteMissEvent<HoldNote>

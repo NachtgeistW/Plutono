@@ -21,15 +21,14 @@ public partial class InputController : Node
             {
 	            if (eventMouseButton.IsPressed())
 	            {
-		            Debug.Log("InputEventMouseButton Pressed");
 		            OnFingerDown(eventMouseButton.Position, 0);
 
 		            Vector3 worldPos = ConvertPerspectiveToOrthographic(eventMouseButton.Position);
-		            Debug.Log("Converted world position: ", worldPos);
+		            Debug.Log("---\nInputEventMouseButton Pressed\nConverted world position: {worldPos}");
 	            }
 	            else
 	            {
-		            Debug.Log("InputEventMouseButton Released");
+		            Debug.Log("---\nInputEventMouseButton Released");
 		            OnFingerUp(eventMouseButton.Position, 0);
 	            }
 	            
@@ -46,8 +45,8 @@ public partial class InputController : Node
 
 	            if ((inputEventMouseMotion.Position - lastPosition).Length() > 10f)
 	            {
-				    Debug.Log($"InputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}" +
-						$"{ConvertPerspectiveToOrthographic(inputEventMouseMotion.Position).X}");
+				    Debug.Log($"---\nInputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}" +
+						$" {ConvertPerspectiveToOrthographic(inputEventMouseMotion.Position).X}");
 				    OnFingerMove(inputEventMouseMotion.Position, 0);
 	            }
             }
@@ -63,7 +62,7 @@ public partial class InputController : Node
 
 				if ((eventScreenDrag.Position - lastPosition).Length() > 10f)
 				{
-					Debug.Log($"InputEventMouseMotion Moved {(eventScreenDrag.Position - lastPosition).Length()}");
+					Debug.Log($"---\nInputEventMouseMotion Moved {(eventScreenDrag.Position - lastPosition).Length()}");
 					OnFingerMove(eventScreenDrag.Position, eventScreenDrag.Index);
 				}
 			}
@@ -71,17 +70,16 @@ public partial class InputController : Node
             {
                 if (eventScreenTouch.IsPressed())
                 {
-	                Debug.Log("InputEventScreenTouch Pressed");
+	                Debug.Log("---\nInputEventScreenTouch Pressed");
 	                OnFingerDown(eventScreenTouch.Position, eventScreenTouch.Index);
 				}
 				else
 				{
-					Debug.Log("InputEventScreenTouch Released");
+					Debug.Log("---\nInputEventScreenTouch Released");
 					OnFingerUp(eventScreenTouch.Position, eventScreenTouch.Index);
 				}
-				Debug.Log($"Mouse Click/Unclick at: {eventScreenTouch.Position}, Finger index: {eventScreenTouch.Index}");
+				Debug.Log($"---\nMouse Click/Unclick at: {eventScreenTouch.Position}, Finger index: {eventScreenTouch.Index}");
 				Debug.Log(ConvertPerspectiveToOrthographic(eventScreenTouch.Position), " ", TimeControl.CurTime);
-
 			}
 		}
     }
