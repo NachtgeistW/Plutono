@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/Scripts/Notes/SlideNote.cs" id="1_3q60b"]
 [ext_resource type="Script" path="res://src/Scripts/Notes/Renderer/TapNoteRenderer.cs" id="2_7wugf"]
-[ext_resource type="Texture2D" uid="uid://bqnqasqsoicxy" path="res://icon.svg" id="3_8jq44"]
+[ext_resource type="Texture2D" uid="uid://dfgnj8iau6v86" path="res://src/Textures/slide.png" id="3_610pa"]
 [ext_resource type="Texture2D" uid="uid://bf384s3ynw424" path="res://src/Textures/02.png" id="4_jhomc"]
 [ext_resource type="Texture2D" uid="uid://djwlyrrb0p5v8" path="res://src/Textures/39.png" id="5_mnuwa"]
 
@@ -242,7 +242,7 @@ explosion = NodePath("Explosion")
 transform = Transform3D(1.2, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)
 axis = 1
 render_priority = 1
-texture = ExtResource("3_8jq44")
+texture = ExtResource("3_610pa")
 
 [node name="Explosion" type="AnimatedSprite3D" parent="Renderer"]
 transform = Transform3D(8, 0, 0, 0, 5.65685, 5.65685, 0, -5.65685, 5.65685, 0, 0, 0)
