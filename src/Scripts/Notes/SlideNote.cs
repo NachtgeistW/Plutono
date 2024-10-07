@@ -42,7 +42,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 	public void Initialize()
 	{
 		SetNoteJudgingSize();
-		noteJudgingSize = 2.4;
+		noteJudgingSize = 1.2;
 		Debug.Log(noteJudgingSize);
 		return;
 
@@ -119,7 +119,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 		{
 			case GameMode.Arbo:
 			case GameMode.Floro:
-				return IsReachRequirementDeemo();
+				return IsReachRequirementPlutono();
 			case GameMode.Stelo:
 			case GameMode.Autoplay:
 			default:
@@ -128,6 +128,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 
 		bool IsReachRequirementDeemo()
 		{
+			if (!IsSliding) return false;
 			return IsTouch(xPos, Data.time, out _, out _);
 		}
 
@@ -136,7 +137,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 			if (!IsSliding) return false;
 			if (!IsTouch(xPos, Data.time, out _, out _))
 				return true;
-			return Mathf.Abs(moved) > noteJudgingSize;
+			return Mathf.Abs(moved) >= noteJudgingSize;
 		}
 	} 
 
@@ -152,7 +153,8 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 	{
 		OnSlideEnd(grade);
 		Debug.Log("NoteJudgeControl Broadcast NoteClearEvent\n" +
-		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}");
+		          $"Note: {Data.id} Time: {Data.time} CurTime: {curTime} Pos: {Data.pos} JudgeSize: {noteJudgingSize}\n" +
+				  $"SlideStartXPos: {slideStartXPos} SlideStartTime: {SlideStartTime}");
 	}
 
 	public void OnClear(NoteGrade grade)
@@ -167,6 +169,7 @@ public partial class SlideNote : Note, IMovableNote, ITappable, ISlidable
 
 	public void OnMiss()
 	{
+		IsClear = true;
 		EventCenter.Broadcast(new NoteMissEvent<SlideNote>
 		{
 			Note = this,

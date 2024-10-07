@@ -46,7 +46,8 @@ public partial class InputController : Node
 
 	            if ((inputEventMouseMotion.Position - lastPosition).Length() > 10f)
 	            {
-				    Debug.Log($"InputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}");
+				    Debug.Log($"InputEventMouseMotion Moved {(inputEventMouseMotion.Position - lastPosition).Length()}" +
+						$"{ConvertPerspectiveToOrthographic(inputEventMouseMotion.Position).X}");
 				    OnFingerMove(inputEventMouseMotion.Position, 0);
 	            }
             }
